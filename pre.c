@@ -112,9 +112,11 @@ int valid_line(list *head){
                         	printf("not enough arguments\n");
                         	return FALSE;
 			}
+
+			curr2 = curr->next;
 			while (curr2->next){
-				if(strcmp(curr2->word,",")){
-					if(strcmp(curr2->next->word,",") && curr2->next->next){
+				if(strcmp(curr2->word,",") && curr2->next->next){
+					if(strcmp(curr2->next->word,",")){
 						printf("missing a comma\n"); 
 						return FALSE;
 					}
@@ -227,7 +229,7 @@ void append(list *head, char word[]){
 }
 
 
-struct return_pre * prerun(){
+int prerun(list *head_tot){
 	int validFLAG = TRUE;
 	FILE *fp;
 	int cntwrd = 0;
@@ -241,9 +243,8 @@ struct return_pre * prerun(){
 	/*32 chars + 1 for \n*/
         char word[32];
 	char line[80];
-	struct list *head_tot = (struct list*)malloc(sizeof(struct list));
-	struct return_pre *pack = (struct return_pre*)malloc(sizeof(struct return_pre));
-	list *curr_tot = (struct list *)malloc(sizeof(struct list));
+	/*struct list *head_tot = (struct list*)malloc(sizeof(struct list));
+	*/list *curr_tot = (struct list *)malloc(sizeof(struct list));
    	fp = fopen("code.as", "r");
    	if (fp == NULL)
    	{
@@ -395,9 +396,9 @@ struct return_pre * prerun(){
 		}
 		}
 	}
+	/*
 	pack->head_return = head_tot;
-	pack->valid = validFLAG;
-	printcheck(head_tot);
+	pack->valid = validFLAG;*/
    	fclose(fp);
-	return pack;	
+	return validFLAG;	
 }

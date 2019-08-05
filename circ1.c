@@ -116,7 +116,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         if(strcmp(current -> word,".string") == 0) 
         {
             current = current -> next ;
-            cntln ;
+        /*    cntln ;*/
             i = 0 ;
             j = 1 ; 
             while(j < strlen(current -> word) - 1)/* not including the lest and first chaer wich is " */

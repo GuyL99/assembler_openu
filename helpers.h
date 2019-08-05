@@ -20,11 +20,10 @@ typedef struct sym{
 } symbol;
 #define start 100 
 typedef struct code{
-	unsigned int IC;
-	int ARE[2];
-	int REST[12];
+	/*int machine_code;*/
+	unsigned int machine_code[14];
 	struct code *next;
-} CODE;
+} code;
 typedef struct list{
 	struct list *next;
 	char word[31];

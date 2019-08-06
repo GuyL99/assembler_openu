@@ -28,10 +28,6 @@ typedef struct list{
 	struct list *next;
 	char word[31];
 } list;
-typedef struct return_pre{
-	list *head_return;
-	int valid;
-} return_pre;
 typedef struct data{
 	unsigned int index;	
 	char name[31];
@@ -48,7 +44,7 @@ const static struct {
     {cmp, "cmp"},
     {add, "add"},
     {sub, "sub"},
-    {not, "not"},
+    {not, "Not"},
     {clr, "clr"},
     {lea, "lea"},
     {inc, "inc"},
@@ -59,7 +55,7 @@ const static struct {
     {prn, "prn"},
     {jsr, "jsr"},
     {rts, "rts"},
-    {stop, "stop"},
+    {stop, "Stop"},
 };
 command conv_enum (const char *str)
 {

@@ -9,84 +9,157 @@ void append_code(code *head, int machine_code){
 	*current->next->machine_code = machine_code;
         current->next->next = NULL;
 }
-void write_code_to_file(code *head){
-	FILE * FP = NULL;
+
+int check_miun(list *curr){
 	int i;
-	code *curr = head;
-	/*fopen("code.ext","a");
-	fopen("code.ent","a");*/
-	FP = fopen("machine.ob","a");
-	while (curr){
-		for(i=0;i<14;i++){
-			if (curr->machine_code[i]==1){
-				fprintf(FP,"1");
-			}else{
-				fprintf(FP,"0");
-			}
+	int flag = 0;
+	if(curr->word[0] == '#'){
+		return 0;
+	}
+	switch(conv_enum3(curr->word)){
+		case r0:
+			return 3;
+		case r1:
+                	return 3;
+		case r2:
+                	return 3;
+		case r3:
+                	return 3;
+                case r4:
+                	return 3;
+                case r5:
+                	return 3;
+		case r6:
+                	return 3;
+                case r7:
+                	return 3;
+		case rNONE:
+			break;
+	}
+	for(i=0;i<strlen(curr->word);i++){
+		if(curr->word[i] == '['){
+			flag = 1;
 		}
+	}
+	if(flag){
+		return 2;
+	} 
+	switch(conv_enum2(curr->word)){
+		case str:
+		       return 1;	
+		case dat:
+		       return 1;	
+		case define:
+		       return 1;	
+		case ext:
+		       return 1;	
+		case ent:
+		       return 1;	
+		case None:
+		      printf("reached end, it's probably an error, func check miun"); 
+		      return 55;
+	}
+	printf("reached end, it's probably an error, func check miun"); 
+	return 55;
+
+}
+int type_one_code(list *head){
+	int m_code=0;
+	list *curr = head;
+	int type_m;
+	int type_m2;
+	if(curr->word[strlen(curr->word)-1]==':'){
 		curr = curr->next;
 	}
-	fclose(FP);
-	
+	switch(conv_enum(curr->word)){
+		case mov:
+			type_m = check_miun(curr->next);	
+			type_m2 = check_miun(curr->next->next->next);	
+			break;
+		case cmp:
+                	type_m = check_miun(curr->next);	
+			type_m2 = check_miun(curr->next->next->next);	
+			break;
+		case add:
+                	type_m = check_miun(curr->next);	
+                	type_m2 = check_miun(curr->next->next->next);	
+                	break;
+                case sub:
+                	type_m = check_miun(curr->next);	
+                	type_m2 = check_miun(curr->next->next->next);	
+                	break;
+		case lea:
+                	type_m = check_miun(curr->next);	
+                	type_m2 = check_miun(curr->next->next->next);	
+                	break;
+		default:
+			break;
+	}
+	return m_code;
 
+}
+
+int type_two_code(list *head){
+	int m_code=0;
+        list *curr = head;
+        int type_m;
+        if(curr->word[strlen(curr->word)-1]==':'){
+        	curr = curr->next;
+        }
+        switch(conv_enum(curr->word)){
+		case not:
+                	type_m = check_miun(curr->next);	
+                	break;
+		case dec:
+                	type_m = check_miun(curr->next);	
+                	break;
+		case inc:
+                	type_m = check_miun(curr->next);	
+                	break;
+		case jmp:
+                	type_m = check_miun(curr->next);	
+                	break;
+		case bne:
+                	type_m = check_miun(curr->next);	
+                	break;
+		case red:
+                	type_m = check_miun(curr->next);	
+                	break;
+		case prn:
+                	type_m = check_miun(curr->next);	
+                	break;
+		case jsr:
+                	type_m = check_miun(curr->next);	
+                	break;
+		case rts:
+                	type_m = check_miun(curr->next);	
+                	break;
+		case stop:
+                	type_m = check_miun(curr->next);	
+                	break;
+		default:
+			break;
+		}
+	return m_code;
 }
 
 
 
-
-int circ2(list * head_list, data * head_data, symbol * head_symbol, code *head_code){
-	/*about a mile from being any close to ready, need some help if u can provide any...*/
+int circ2(list *head_list, data *head_data, symbol *head_symbol, code *head_code){
 	list *curr = head_list;
-	list *curr2 = head_list;
 	symbol *curr_sym = head_symbol;
+	data *curr_data = head_data;
 	code *curr_code = head_code;
-	int imFLAG = 0;
-	int dirFLAG = 0;
 	int code_val = 0 ;
-	while (curr!=NULL){
-		if (!strcmp(curr->word,".define") || !strcmp(curr->word,".data") || !strcmp(curr->word,".extern") || strcmp(curr->word,".string")){
-			
-		}else{
-			while(curr2->word[strlen(curr2->word)]!='\n'){
-				if(!imFLAG && curr2->word[0]=='#'){
-					curr_code->machine_code[13] = 0;
-					curr_code->machine_code[12] = 0;
-					imFLAG = 1;
-				}
-				if(!imFLAG){
-					while (curr_sym->next){
-						if(!strcmp(curr2->word,head_symbol->name)){
-							if(curr_sym->type ==3){
-								curr_code->machine_code[13] = 1;
-                                                                curr_code->machine_code[12] = 0;
-								dirFLAG=1;
-							}else{
-								curr_code->machine_code[13] = 0;
-                                                                curr_code->machine_code[12] = 1;
-								dirFLAG=1;
-							}
-						}
-						curr_sym = curr_sym->next;
-					}
-					if(!dirFLAG){
-						if(curr2->word[strlen(curr2->word)-1] == ']'){
-						
-						}
-					
-					}
-				}
-				curr2= curr2->next;
+	while (curr){
+			if(!strcmp(curr->word,"mov")){
+				code_val = type_one_code(curr);	
 			}
-			if(!head_code->machine_code){
-				*head_code->machine_code =*curr_code->machine_code;
-				head_code->next = NULL;
-			}else{
-				append_code(head_code,code_val);
-			
-			}
-		}
+			if(!strcmp(curr->word,"cmp")){
+                        	code_val = type_one_code(curr);	
+                        }
         	curr = curr->next;
         }
-	write_code_to_file(head_code);
-	return 0;
+	/*write_code_to_file(head_code);*/
+	return 1;
 }

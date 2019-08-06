@@ -1,6 +1,7 @@
 #include "pre.c"
 #include "circ1.c"
 #include "second.c"
+#include "output.c"
 
 
 int main(){
@@ -15,26 +16,15 @@ int main(){
 		printf("syntax error stopping assembling\n");
 		return 0;
 	}
-	while(head_list){
-		printf("%s",head_list->word);
-		head_list = head_list->next;
-	}
+
 	circ1_valid =circ1(head_list,head_sym,head_dat);
-	/*TODO:send to dor's method to decode a line*/
 	if(!circ1_valid){
         	printf("circ1 error stopping assembling\n");
         	return 0;
         }
 
-
-	/*TODO:send to mine method to decode a line*/
   	circ2_valid = circ2(head_list,head_dat,head_sym,head_code);
-	if(!circ2_valid){
-        	printf("circ2 error stopping assembling\n");
-        	return 0;
-        }  
+	if(!circ2_valid){}else{}
 
 	return 0;
-
-
 }

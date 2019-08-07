@@ -242,6 +242,7 @@ int prerun(list *head_tot){
         int flag=0;
 	/*32 chars + 1 for \n*/
         char word[32];
+	int u,isdigflag;
 	char line[80];
 	/*struct list *head_tot = (struct list*)malloc(sizeof(struct list));
 	*/list *curr_tot = (struct list *)malloc(sizeof(struct list));
@@ -358,6 +359,28 @@ int prerun(list *head_tot){
                                 	memset(word, '\0', sizeof word);
                                 	break;
 					}
+				case '[':
+					u=i+1;
+					if(isdigit(line[u])){
+						isdigflag=1;		
+					}
+					while(line[u]!=']'){
+						if(!isdigit(line[u]) && !isalpha(line[u])){
+							printf("unallowed sign inside parentheses, error in line %d\n",cntln);
+							validFLAG =FALSE;
+						}
+						if(isalpha(line[u]) && isdigflag){
+							printf("number with letters, error in line %d\n",cntln);
+							isdigflag=0;
+							validFLAG = FALSE;
+						}
+						u++;
+					}
+					flag++ ;
+                                        word[j]=line[i];	
+					isdigflag=0;
+                                        j++;
+                                        break;
 				default:
 					flag++ ;
 					word[j]=line[i];	

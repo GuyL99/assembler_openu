@@ -1,3 +1,5 @@
+#ifndef HELPERS_H
+#define HELPERS_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -104,3 +106,4 @@ regis conv_enum3 (const char *str)
              return regcnvrt[j].val;    
      return rNONE;
 }
+#endif

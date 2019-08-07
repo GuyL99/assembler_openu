@@ -86,8 +86,11 @@ int type_one_code(list *head,int opcode, symbol *head_sym){
 	int m_code=0;
 	list *curr = head;
 	int type_m=check_miun(curr->next);	
+	int are_first;
+	int are_second;
+	int are_first_ind=0;
+	int are_second_ind=0;
 	int type_m2=check_miun(curr->next->next->next);	
-	if(type_m||type_m2){}
 	return m_code;
 
 }
@@ -96,7 +99,9 @@ int type_two_code(list *head,int opcode){
 	int m_code=0;
         list *curr = head;
         int type_m=check_miun(curr->next);	;
-	if(type_m){}
+        if(curr->word[strlen(curr->word)-1]==':'){
+        	curr = curr->next;
+        }
 	return m_code;
 }
 
@@ -108,52 +113,49 @@ int circ2(list *head_list, data *head_data, symbol *head_s, code *head_code){
 	while (curr){
 		switch(conv_enum(curr->word)){
 			case mov:	
-				code_val = type_one_code(curr,0,head_s);
+				code_val = type_one_code(curr,0);
 				break;
 			case cmp:	
-				code_val = type_one_code(curr,1,head_s);
+				code_val = type_one_code(curr,0);
 				break;
 			case add:	
-				code_val = type_one_code(curr,2,head_s);
+				code_val = type_one_code(curr,0);
 				break;
 			case sub:	
-				code_val = type_one_code(curr,3,head_s);
+				code_val = type_one_code(curr,0);
 				break;
 			case lea:	
-				code_val = type_one_code(curr,6,head_s);
+				code_val = type_one_code(curr,0);
 				break;
 			case inc:	
-				code_val = type_two_code(curr,7);
+				code_val = type_two_code(curr,0);
 				break;
-			case clr:	
-                        	code_val = type_two_code(curr,7);
-                        	break;
 			case dec:	
-				code_val = type_two_code(curr,8);
+				code_val = type_two_code(curr,0);
 				break;
 			case jmp:	
-				code_val = type_two_code(curr,9);
+				code_val = type_two_code(curr,0);
 				break;
 			case rts:	
-				code_val = type_two_code(curr,14);
+				code_val = type_two_code(curr,0);
 				break;
 			case not:	
-				code_val = type_two_code(curr,4);
+				code_val = type_two_code(curr,0);
 				break;
 			case jsr:	
-				code_val = type_two_code(curr,13);
+				code_val = type_two_code(curr,0);
 				break;
 			case prn:	
-				code_val = type_two_code(curr,12);
+				code_val = type_two_code(curr,0);
 				break;
 			case red:	
-				code_val = type_two_code(curr,11);
+				code_val = type_two_code(curr,0);
 				break;
 			case bne:	
-				code_val = type_two_code(curr,10);
+				code_val = type_two_code(curr,0);
 				break;
 			case stop:
-				code_val = type_two_code(curr,15);
+				code_val = type_two_code(curr,0);
 				break;
 			default:
 				break;

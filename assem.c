@@ -1,7 +1,6 @@
 #include "pre.c"
 #include "circ1.c"
 #include "second.c"
-#include "output.c"
 
 
 int main(){
@@ -24,7 +23,10 @@ int main(){
         }
 
   	circ2_valid = circ2(head_list,head_dat,head_sym,head_code);
-	if(!circ2_valid){}else{}
+	if(!circ2_valid){
+        	printf("circ2 error stopping assembling\n");
+        	return 0;
+	}
 
 	return 0;
 }

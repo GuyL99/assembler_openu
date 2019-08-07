@@ -1,3 +1,5 @@
+#include "helpers.h"
+#include "output.c"
 int circ1(list *head , symbol *symhead,data *datahead ){
     int ic = 100,dc = 0 ; 
     int i , j , haserror = 1 , cntln = 0;

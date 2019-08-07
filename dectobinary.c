@@ -1,3 +1,4 @@
+#include "helpers.h"
 int *decToBinary (int n)
 {
   int neg = FALSE;

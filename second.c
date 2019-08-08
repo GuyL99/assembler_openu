@@ -1,167 +1,411 @@
 #include "dectobinary.c"
+#include "output.c"
 #include "helpers.h"
-
-void append_code(code *head, int machine_code){
-	code * current = head;
-        while (current->next) {
-        	current = current->next;
-        }
-        current->next = malloc(sizeof(code));
-	*current->next->machine_code = machine_code;
-        current->next->next = NULL;
-}
-
-int check_miun(list *curr){
+int check_miun(char word[31]){
 	int i;
 	int flag = 0;
-	if(curr->word[0] == '#'){
+	if(word[0] == '#'){
 		return 0;
 	}
-	switch(conv_enum3(curr->word)){
-		case r0:
-			return 3;
-		case r1:
-                	return 3;
-		case r2:
-                	return 3;
-		case r3:
-                	return 3;
-                case r4:
-                	return 3;
-                case r5:
-                	return 3;
-		case r6:
-                	return 3;
-                case r7:
-                	return 3;
-		case rNONE:
-			break;
+	if(conv_enum3(word)!=rNONE){
+		return 3;
 	}
-	for(i=0;i<strlen(curr->word);i++){
-		if(curr->word[i] == '['){
+	for(i=0;i<strlen(word);i++){
+		if(word[i] == '['){
 			flag = 1;
+			break;
 		}
 	}
 	if(flag){
 		return 2;
 	} 
-	switch(conv_enum2(curr->word)){
-		case str:
-		       return 1;	
-		case dat:
-		       return 1;	
-		case define:
-		       return 1;	
-		case ext:
-		       return 1;	
-		case ent:
-		       return 1;	
-		case None:
-		      printf("reached end, it's probably an error, func check miun"); 
-		      return 55;
-	}
-	printf("reached end, it's probably an error, func check miun"); 
 	return 55;
 
 }
-int check_are(symbol *head,char name1[31]){
-	symbol *curr = head;
-	if(conv_enum3(name1)!=rNONE || name1[0]=='#'){
-		return 0;
-	} 
-	while(curr){
-		if(!strcmp(curr->name,name1)){
-			if(curr->type ==external){
-				return 1;
+int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
+	int m_code=0;
+	list *curr = currr;
+	symbol *curr_sym = head_sym;
+	int type_m=check_miun(curr->next->word);	
+	int type_m2=check_miun(curr->next->next->next->word);
+	int coded = FALSE;
+	char first_ind[31];
+	char second_ind[31];
+	char s_word[31];
+	int v = 0;
+	int u = 0;
+	m_code|=type_m2<<2;
+	m_code|=type_m<<4;
+	m_code|=opcode<<6;
+	write_code_to_file(m_code,ic);
+	m_code = 0;
+	++ic;
+	curr = curr->next;
+	switch(type_m){
+		case 3:
+			m_code|=conv_enum3(curr->word)<<5;
+			if(type_m==type_m2){
+				m_code|=conv_enum3(curr->next->next->word)<<2;
+				coded = TRUE;
 			}
-			return 2;	
-		}	
-		curr = curr->next;
+			write_code_to_file(m_code,ic);
+			ic++;
+			break;
+		case 2:
+			while(curr->word[v]!='['){
+				first_ind[v] = curr->word[v];
+				v++;	
+			}
+			v++;
+			while(curr->word[v]!=']'){
+				second_ind[u] = curr->word[v];
+				u++;
+				v++;
+			}
+			while(curr_sym){
+				if(!strcmp(curr_sym->name,first_ind)){
+					if(curr_sym->type == external){
+						m_code|=1;
+					}else{
+						m_code|=2;
+						m_code|=curr_sym->value<<2;
+					}
+
+				}
+				curr_sym = curr_sym->next;
+			}
+			write_code_to_file(m_code,ic);
+			ic++;
+			m_code = 0;
+			if(!isdigit(second_ind)){
+				while(curr_sym){
+                                	if(!strcmp(curr_sym->name,second_ind)){
+                                		if(curr_sym->type == external){
+                                			m_code|=1;
+                                		}else{
+                                			m_code|=curr_sym->value<<2;
+                                		}
+                                                break;                       
+                                	}
+                                	curr_sym = curr_sym->next;
+                                }
+        		}else{
+        			m_code|=atoi(curr->word);
+        		}
+			write_code_to_file(m_code,ic);
+			ic++;
+			break;
+		case 1:
+			m_code|=2;
+			while(curr_sym){
+                        	if(!strcmp(curr_sym->name,second_ind)){
+                        		if(curr_sym->type == external){
+						m_code = 0;
+                        			m_code|=1;
+                        		}else{
+                        			m_code|=curr_sym->value<<2;
+                        		}
+        				write_code_to_file(m_code,ic);
+					break;
+                                                                           
+                        	}
+                        	curr_sym = curr_sym->next;
+                        }
+			ic++;
+			break;
+		case 0:
+			if(!isdigit(curr->word)){
+				strcpy(s_word,strtok(curr->word,"#"));
+				while(curr_sym){
+                                	if(!strcmp(curr_sym->name,s_word)){
+                                		if(curr_sym->type == external){
+                                			m_code|=1;
+                                		}else{
+                                			m_code|=curr_sym->value<<2;
+                                		}
+						break;
+                                                                                   
+                                	}
+                                	curr_sym = curr_sym->next;
+				}
+			}else{
+				m_code|=atoi(curr->word);
+			}
+        		write_code_to_file(m_code,ic);
+			ic++;
+			break;
 	}
-	return 55;
-
+	m_code = 0;
+	curr_sym = head_sym;
+	curr = curr->next->next;
+	memset(first_ind, '\0', sizeof first_ind);
+	memset(second_ind, '\0', sizeof second_ind);
+	switch(type_m2){
+		case 3:
+			if(!coded){
+				m_code|=conv_enum3(curr->word)<<2;
+        			write_code_to_file(m_code,ic);
+				ic++;
+			}
+			break;
+		case 2:
+			while(curr->word[v]!='['){                                       	
+                		first_ind[v] = curr->word[v];
+                		v++;	
+                	}
+                	v++;
+                	while(curr->word[v]!=']'){
+                		second_ind[u] = curr->word[v];
+                		u++;
+                		v++;
+                	}
+                	while(curr_sym){
+                		if(!strcmp(curr_sym->name,first_ind)){
+                			if(curr_sym->type == external){
+                				m_code|=1;
+                			}else{
+                				m_code|=2;
+                				m_code|=curr_sym->value<<2;
+                			}
+					break;
+                                                                                          
+                		}
+                		curr_sym = curr_sym->next;
+                	}
+                	write_code_to_file(m_code,ic);
+			curr_sym = head_sym;
+			m_code = 0;
+                	ic++;
+                	if(!isdigit(second_ind)){
+                		while(curr_sym){
+                                	if(!strcmp(curr_sym->name,second_ind)){
+                                		if(curr_sym->type == external){
+                                			m_code|=1;
+                                		}else{
+                                			m_code|=curr_sym->value<<2;
+                                		}
+						break;
+                                                                                   
+                                	}
+                                	curr_sym = curr_sym->next;
+                                }
+        		}else{
+        			m_code|=atoi(curr->word);
+        		}
+                	write_code_to_file(m_code,ic);
+                	ic++;
+                	break;
+                case 1:
+                	m_code|=2;
+                	while(curr_sym){
+                        	if(!strcmp(curr_sym->name,second_ind)){
+                        		if(curr_sym->type == external){
+						m_code=0;
+                        			m_code|=1;
+                        		}else{
+                        			m_code|=curr_sym->value<<2;
+                        		}
+        				write_code_to_file(m_code,ic);
+					break;
+                                                                           
+                        	}
+                        	curr_sym = curr_sym->next;
+                        }
+                	ic++;
+                	break;
+                case 0:
+                	if(!isdigit(curr->word)){
+				strcpy(s_word,strtok(curr->word,"#"));
+                		while(curr_sym){
+                                	if(!strcmp(curr_sym->name,s_word)){
+                                		if(curr_sym->type == external){
+                                			m_code|=1;
+                                		}else{
+                                			m_code|=curr_sym->value<<2;
+                                		}
+						break;
+                                                                                   
+                                	}
+                                	curr_sym = curr_sym->next;
+                		}
+                	}else{
+                		m_code|=atoi(curr->word);
+                	}
+        		write_code_to_file(m_code,ic);
+                	ic++;
+                	break;
+	}
+	return ic;
 
 }
-int type_one_code(list *head,int opcode, symbol *head_sym){
+
+int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 	int m_code=0;
-	list *curr = head;
-	int type_m=check_miun(curr->next);	
-	int type_m2=check_miun(curr->next->next->next);	
-	if(type_m||type_m2){}
-	return m_code;
-
+        list *curr = currr;
+        int type_m=check_miun(curr->next->word);	
+	symbol *curr_sym = head_sym;
+        char first_ind[31];
+        char second_ind[31];
+	char s_word[31];
+        int v = 0;
+        int u = 0;
+	m_code|=type_m<<2;
+        m_code|=opcode<<6;
+        write_code_to_file(m_code,ic);
+	m_code = 0;
+	curr = curr->next;
+	ic++;
+	switch(type_m){
+        	case 3:
+        		m_code|=conv_enum3(curr->word)<<5;
+        		write_code_to_file(m_code,ic);
+        		ic++;
+        		break;
+        	case 2:
+        		while(curr->word[v]!='['){
+        			first_ind[v] = curr->word[v];
+        			v++;	
+        		}
+        		v++;
+        		while(curr->word[v]!=']'){
+        			second_ind[u] = curr->word[v];
+        			u++;
+        			v++;
+        		}
+        		while(curr_sym){
+        			if(!strcmp(curr_sym->name,first_ind)){
+        				if(curr_sym->type == external){
+        					m_code|=1;
+        				}else{
+        					m_code|=2;
+        					m_code|=curr_sym->value<<2;
+        				}
+					break;
+                                                                                          
+        			}
+        			curr_sym = curr_sym->next;
+        		}
+			m_code = 0;
+        		write_code_to_file(m_code,ic);
+        		ic++;
+        		if(!isdigit(second_ind)){
+        			while(curr_sym){
+                                	if(!strcmp(curr_sym->name,second_ind)){
+                                		if(curr_sym->type == external){
+                                			m_code|=1;
+                                		}else{
+                                			m_code|=curr_sym->value<<2;
+                                		}
+						break;
+                                                                                   
+                                	}
+                                	curr_sym = curr_sym->next;
+                                }
+        		}else{
+        			m_code|=atoi(curr->word);
+        		}
+        		write_code_to_file(m_code,ic);
+        		ic++;
+        		break;
+        	case 1:
+        		m_code|=2;
+        		while(curr_sym){
+                        	if(!strcmp(curr_sym->name,second_ind)){
+                        		if(curr_sym->type == external){
+						m_code=0;
+                        			m_code|=1;
+                        		}else{
+                        			m_code|=curr_sym->value<<2;
+                        		}
+        				write_code_to_file(m_code,ic);
+					break;
+                        	}
+                        	curr_sym = curr_sym->next;
+                        }
+        		ic++;
+        		break;
+        	case 0:
+        		if(!isdigit(curr->word)){
+				strcpy(s_word,strtok(curr->word,"#"));
+        			while(curr_sym){
+                                	if(!strcmp(curr_sym->name,s_word)){
+                                		if(curr_sym->type == external){
+                                			m_code|=1;
+                                		}else{
+                                			m_code|=curr_sym->value<<2;
+                                		}
+						break;
+                                	}
+                                	curr_sym = curr_sym->next;
+        			}
+        		}else{
+        			m_code|=atoi(curr->word);
+        		}
+        		write_code_to_file(m_code,ic);
+        		ic++;
+        		break;
+        }
+	return ic;
 }
 
-int type_two_code(list *head,int opcode){
-	int m_code=0;
-        list *curr = head;
-        int type_m=check_miun(curr->next);	;
-	if(type_m){}
-	return m_code;
-}
 
 
-
-int circ2(list *head_list, data *head_data, symbol *head_s, code *head_code){
+int circ2(list *head_list, data *head_data, symbol *head_s){
 	list *curr = head_list;
-	int code_val = 0 ;
+	int ic = 100 ;
 	while (curr){
 		switch(conv_enum(curr->word)){
 			case mov:	
-				code_val = type_one_code(curr,0,head_s);
+				ic = type_one_code(curr,0,head_s,ic);
 				break;
 			case cmp:	
-				code_val = type_one_code(curr,1,head_s);
+				ic = type_one_code(curr,1,head_s,ic);
 				break;
 			case add:	
-				code_val = type_one_code(curr,2,head_s);
+				ic = type_one_code(curr,2,head_s,ic);
 				break;
 			case sub:	
-				code_val = type_one_code(curr,3,head_s);
+				ic = type_one_code(curr,3,head_s,ic);
 				break;
 			case lea:	
-				code_val = type_one_code(curr,6,head_s);
+				ic = type_one_code(curr,6,head_s,ic);
 				break;
 			case inc:	
-				code_val = type_two_code(curr,7);
+				ic = type_two_code(curr,7,head_s,ic);
 				break;
 			case clr:	
-                        	code_val = type_two_code(curr,7);
+                        	ic = type_two_code(curr,7,head_s,ic);
                         	break;
 			case dec:	
-				code_val = type_two_code(curr,8);
+				ic = type_two_code(curr,8,head_s,ic);
 				break;
 			case jmp:	
-				code_val = type_two_code(curr,9);
+				ic = type_two_code(curr,9,head_s,ic);
 				break;
 			case rts:	
-				code_val = type_two_code(curr,14);
+				ic = type_two_code(curr,14,head_s,ic);
 				break;
 			case not:	
-				code_val = type_two_code(curr,4);
+				ic = type_two_code(curr,4,head_s,ic);
 				break;
 			case jsr:	
-				code_val = type_two_code(curr,13);
+				ic = type_two_code(curr,13,head_s,ic);
 				break;
 			case prn:	
-				code_val = type_two_code(curr,12);
+				ic = type_two_code(curr,12,head_s,ic);
 				break;
 			case red:	
-				code_val = type_two_code(curr,11);
+				ic = type_two_code(curr,11,head_s,ic);
 				break;
 			case bne:	
-				code_val = type_two_code(curr,10);
+				ic = type_two_code(curr,10,head_s,ic);
 				break;
 			case stop:
-				code_val = type_two_code(curr,15);
+				ic = type_two_code(curr,15,head_s,ic);
 				break;
 			default:
 				break;
-		
-		
-		
 		}
-		append_code(head_code,code_val);
         	curr = curr->next;
         }
 	return 1;

@@ -244,13 +244,12 @@ int prerun(list *head_tot){
         char word[32];
 	int u,isdigflag;
 	char line[80];
-	/*struct list *head_tot = (struct list*)malloc(sizeof(struct list));
-	*/list *curr_tot = (struct list *)malloc(sizeof(struct list));
+	list *curr_tot = (struct list *)malloc(sizeof(struct list));
    	fp = fopen("code.as", "r");
    	if (fp == NULL)
    	{
-      		perror("Error while opening the file.\n");
-      		exit(1);
+      		printf("Error while opening the file.\n");
+      		return 0;
    	}
 	if (head == NULL) {
         	printf("error whatever could'nt assgin mem");	
@@ -419,9 +418,6 @@ int prerun(list *head_tot){
 		}
 		}
 	}
-	/*
-	pack->head_return = head_tot;
-	pack->valid = validFLAG;*/
    	fclose(fp);
 	return validFLAG;	
 }

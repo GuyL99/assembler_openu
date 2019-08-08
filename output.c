@@ -1,39 +1,26 @@
-int print_to_ee(symbol * head_symbol,char name1[31], int valer){
-	symbol *curr = head_symbol;
-	char new_name[31];
+void print_to_ee(char name1[31], int valer,int ic){
 	FILE *FP;
 	if(valer){
 	FP = fopen("machine.ent","a");
 	}else{
 	FP = fopen("machine.ext","a");
 	}
-	while(curr){
-		if(!strcmp(curr->name,name1)){
-			strncpy(new_name,curr->name,strlen(curr->name)-1);
-		printf("%s %u\n",new_name,curr->value);
-
-			fprintf(FP,"%s %u\n",curr->name,curr->value);	
-			break;	
-		}
-		curr = curr->next;
-	}
+	fprintf(FP,"%s %u\n",name1,ic);	
 	fclose(FP);
-	return 1;
 }
-void write_code_to_file(code *head){
+void write_code_to_file(int m_code,int ic){
 	FILE * FP = NULL;
-	int i;
-	code *curr = head;
-	FP = fopen("machine.ob","a");
-	while (curr){
-		for(i=0;i<14;i++){
-			if (curr->machine_code[i]==1){
-				fprintf(FP,"1");
-			}else{
-				fprintf(FP,"0");
-			}
+	char b[17];
+    	int z;
+    	b[0] = '\0';
+    	for (z = 32786; z > 0; z >>= 1)
+    	{
+		if(z>8192){
+			continue;
 		}
-		curr = curr->next;
-	}
+        	strcat(b, ((m_code & z) == z) ? "1" : "0");
+    	}
+	FP = fopen("machine.ob","a");
+	fprintf(FP,"%d %s\n",ic,b);
 	fclose(FP);
 }

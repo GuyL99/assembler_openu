@@ -46,7 +46,7 @@ const static struct {
     {cmp, "cmp"},
     {add, "add"},
     {sub, "sub"},
-    {not, "Not"},
+    {not, "not"},
     {clr, "clr"},
     {lea, "lea"},
     {inc, "inc"},
@@ -57,7 +57,7 @@ const static struct {
     {prn, "prn"},
     {jsr, "jsr"},
     {rts, "rts"},
-    {stop, "Stop"},
+    {stop, "stop"},
 };
 command conv_enum (const char *str)
 {
@@ -90,13 +90,21 @@ const static struct {
     const char *str;
 } regcnvrt [] = {
     {r0, "r0"},
+    {r0, "r0\n"},
     {r1, "r1"},
+    {r1, "r1\n"},
     {r2, "r2"},
+    {r2, "r2\n"},
     {r3, "r3"},
+    {r3, "r3\n"},
     {r4, "r4"},
+    {r4, "r4\n"},
     {r5, "r5"},
+    {r5, "r5\n"},
     {r6, "r6"},
+    {r6, "r6\n"},
     {r7, "r7"},
+    {r7, "r7\n"},
 };
 regis conv_enum3 (const char *str)
 {

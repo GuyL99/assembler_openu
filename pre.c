@@ -244,7 +244,7 @@ int prerun(list *head_tot){
 	/*32 chars + 1 for \n*/
         char word[namelen + 1];
 	int u,isdigflag;
-	char line[80];
+	char line[linelen];
 	list *curr_tot = (struct list *)malloc(sizeof(struct list));
    	fp = fopen("code.as", "r");
    	if (fp == NULL)
@@ -255,7 +255,7 @@ int prerun(list *head_tot){
 	if (head == NULL) {
         	printf("error whatever could'nt assgin mem");	
         }
-   	while(fgets(line,80,fp)){
+   	while(fgets(line,linelen,fp)){
 		if(line[0]=='\n' || line[0]=='\0'){
 			continue;
 			/*dump empty lines*/

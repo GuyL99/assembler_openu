@@ -1,13 +1,13 @@
 void convert(int n)
 {
-    int temp , index = 6;
-    char conv[7] ;
+    int temp , index = convertlen - 1;
+    char conv[convertlen] ;
     while(n)
     {
-        temp = n & 3 ;
+        temp = n & 3 ; /* 3 = 11 in binary */ 
         printf("temp %d ", temp);
-        n >>= 2 ; 
-        switch(temp)
+        n >>= 2 ; /* moving 2 bits */ 
+        switch(temp) /*we dont use define Because 0-4 is the name case of the converted */
         {
             case 0 :
             conv[index] = '*' ;
@@ -31,7 +31,7 @@ void convert(int n)
         index-- ;
         
     }
-    while(index >= 0)
+    while(index >= 0) /* filing zeroes */ 
     {
         conv[index] = '*' ;
         index-- ;

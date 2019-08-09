@@ -1,3 +1,4 @@
+#include "helpers.h"
 int symch(symbol symhead)
 {
     symbol symcurrent = symhead ;

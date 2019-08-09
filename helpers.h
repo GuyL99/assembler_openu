@@ -7,8 +7,8 @@
 
 #define FALSE 0
 #define TRUE 1
-#define start 100 
-#define namelen 31
+#define start 100 /* ic start at 100 */ 
+#define namelen 31 /* names is 31 Characters */
 #define codelen 14
 
 typedef enum {mov,cmp,add,sub,not,clr,lea,inc,dec,jmp,bne,red,prn,jsr,rts,stop,NONE} command;

@@ -10,6 +10,7 @@ final project for cs computer systems
 #### 4. create a data writing mechanism and append it to the end of the stack
 #### 5. write comments.
 #### 6. write magic numbers.
+#### 7. adding circ2.c!!!!!!
 
 
 ### think of more if you have any

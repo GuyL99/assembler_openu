@@ -9,8 +9,9 @@
 #define TRUE 1
 #define start 100 /* ic start at 100 */ 
 #define namelen 31 /* names is 31 Characters */
-#define codelen 14
-#define convertlen 7
+#define codelen 14 /* 14 bits to work with */
+#define convertlen 7 /* 14 bits to 7 convert*/  
+#define linelen 80 /*we can decide the len of line in file */ 
 
 typedef enum {mov,cmp,add,sub,not,clr,lea,inc,dec,jmp,bne,red,prn,jsr,rts,stop,NONE} command;
 typedef enum {A,R,E}ARE;

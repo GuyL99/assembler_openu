@@ -242,7 +242,7 @@ int prerun(list *head_tot){
         int j=0;
         int flag=0;
 	/*32 chars + 1 for \n*/
-        char word[32];
+        char word[namelen + 1];
 	int u,isdigflag;
 	char line[80];
 	list *curr_tot = (struct list *)malloc(sizeof(struct list));

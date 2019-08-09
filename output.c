@@ -1,6 +1,6 @@
 #include "helpers.h"
 #include "convert.c"
-void print_to_ee(char name1[31], int valer,int ic){
+void print_to_ee(char name1[namelen], int valer,int ic){
 	FILE *FP;
 	if(valer){
 	FP = fopen("machine.ent","a");

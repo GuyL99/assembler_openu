@@ -1,6 +1,6 @@
 #include "output.c"
 #include "helpers.h"
-int check_miun(char word[31]){
+int check_miun(char word[namelen]){
 	int i;
 	int flag = 0;
 	if(word[0] == '#'){
@@ -28,9 +28,9 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 	int type_m=check_miun(curr->next->word);	
 	int type_m2=check_miun(curr->next->next->next->word);
 	int coded = FALSE;
-	char first_ind[31];
-	char second_ind[31];
-	char s_word[31];
+	char first_ind[namelen];
+	char second_ind[namelen];
+	char s_word[namelen];
 	int v = 0;
 	int u = 0;
 	int foundFLAG = 0;
@@ -260,9 +260,9 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         list *curr = currr;
         int type_m=check_miun(curr->next->word);	
 	symbol *curr_sym = head_sym;
-        char first_ind[31];
-        char second_ind[31];
-	char s_word[31];
+        char first_ind[namelen];
+        char second_ind[namelen];
+	char s_word[namelen];
         int v = 0;
         int u = 0;
         int foundFLAG = 0;
@@ -390,7 +390,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 
 int circ2(list *head_list, data *head_data, symbol *head_s){
 	list *curr = head_list;
-	int ic = 100 ;
+	int ic = start ;
 	while (curr){
 		switch(conv_enum(curr->word)){
 			case mov:	

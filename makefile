@@ -6,7 +6,7 @@ asmbl.o: prerun.o circ1.o circ2.o assem.c helpers.h
 	gcc -c -ansi -Wall -pedantic assem.c -o asmbl.o
 	@echo "finished compiling the main"
 	@echo "<===================-->"
-circ2.o: output.c dectobinary.c second.c helpers.h  
+circ2.o: output.c convert.c second.c helpers.h  
 	gcc -c -ansi -Wall -pedantic second.c -o circ2.o
 	@echo "finished compiling the second run"
 	@echo "<=================---->"

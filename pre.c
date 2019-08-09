@@ -14,19 +14,19 @@ int check_first_group(list *curr){
 	if (curr->word[0] == ';'){
         	return TRUE;
         }
-	if(curr->next==NULL){
+	if(!curr->next){
         	printf("not enough arguments\n");
         	return FALSE;
         }else if (!curr->next->next){
         	printf("not enough arguments\n");	
         	return FALSE;
-        }else if (curr->next->next->next==NULL){
+        }else if (!curr->next->next->next){
          	printf("not enough arguments\n");	
 		if(curr->next->next->word[0] !=','){
                   printf("could be missing a comma\n");
 		}
         	return FALSE;
-	}else if (curr->next->next->next->next != NULL){
+	}else if (curr->next->next->next->next){
          	printf("too many arguments\n");	
         	return FALSE;
         }
@@ -51,7 +51,7 @@ int check_second_group(list *curr){
 	if (curr->word[0] == ';'){
 		return TRUE;
 	}
-	if(curr->next==NULL){
+	if(!curr->next){
         	printf("not enough arguments loacking operand\n");	
                 return FALSE;
 	}if(!strcmp(curr->next->word,",")){ 
@@ -61,13 +61,20 @@ int check_second_group(list *curr){
                   return FALSE;
 		}
 		return FALSE;
-	}else if (curr->next->next!= NULL){
+	}else if (curr->next->next){
 		if(!strcmp(curr->next->next->word,",")){
 			printf("comma in second type operation\n");
 		}
          	printf("too many arguments arguments\n");	
                 return FALSE;
         }
+	return TRUE;
+}
+int check_third_group(list *curr){
+	if(curr->next){
+		printf("too many arguments\n");
+		return FALSE;
+	}
 	return TRUE;
 }
 int valid_line(list *head){
@@ -196,15 +203,9 @@ int valid_line(list *head){
                 case jsr:
 			return check_second_group(curr);
                 case rts:
-			if(curr->next){
-				printf("too many arguments");
-				return FALSE; 
-			}
+			return check_third_group(curr);
                 case stop:
-			if(curr->next){
-                        	printf("too many arguments");
-                        	return FALSE; 
-                        }
+			return check_third_group(curr);
 		case NONE:
 			if (conv_enum(curr->next->next->word)==NONE && conv_enum2(curr->next->next->word)==None){
 			printf("unrecognizable command\n");
@@ -254,8 +255,8 @@ int prerun(list *head_tot){
 	if (head == NULL) {
         	printf("error whatever could'nt assgin mem");	
         }
-   	while(!feof(fp)){
-		if(!fgets(line,80,fp)){
+   	while(fgets(line,80,fp)){
+		if(line[0]=='\n' || line[0]=='\0'){
 			continue;
 			/*dump empty lines*/
 		}

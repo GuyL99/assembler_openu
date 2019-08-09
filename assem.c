@@ -19,8 +19,13 @@ int main(){
         	printf("circ1 error stopping assembling\n");
         	return 0;
         }
+	/*while(head_sym){
+		printf("%s\n",head_sym->name);
+		head_sym = head_sym->next;
+	}*/
  	circ2_valid = circ2(head_list,head_dat,head_sym);
 	if(!circ2_valid){
+		remove_files();
         	printf("circ2 error stopping assembling\n");
         	return 0;
 	}

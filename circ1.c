@@ -40,7 +40,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         else    
         if (strchr(current -> word,':') != NULL) /* case symbol */ 
         {
-                symcurrent -> name = strtok(current -> word , ':') ; /*omiting ':' */
+                strcpy(symcurrent -> name,strtok(current -> word , ":")) ; /*omiting ':' */
                 strcpy(savename,symcurrent -> name) ;    /* saving name for data */ 
                 symcurrent -> value = ic ;
                 if(strcmp(current -> next -> word,".data") == 0 /* case instruct */ 

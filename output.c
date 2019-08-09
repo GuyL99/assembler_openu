@@ -1,3 +1,5 @@
+#include "helpers.h"
+#include "convert.c"
 void print_to_ee(char name1[31], int valer,int ic){
 	FILE *FP;
 	if(valer){
@@ -23,4 +25,15 @@ void write_code_to_file(int m_code,int ic){
 	FP = fopen("machine.ob","a");
 	fprintf(FP,"%d %s\n",ic,b);
 	fclose(FP);
+}
+void remove_files(){
+	int remover1 = remove("machine.ext");
+	int remover2 = remove("machine.ent");
+	if(remover1){
+		printf("Error: unable to delete the .ext file");
+	}
+	if(remover2){
+		printf("Error: unable to delete the .ent file");
+	}
+
 }

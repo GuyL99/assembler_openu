@@ -2,21 +2,21 @@
 int circ1(list *head , symbol *symhead,data *datahead ){
     int ic = 100,dc = 0 ; 
     int i , j , haserror = 1 , cntln = 0;
-    char savename[31] ;
+    char savename[31] ; /* the name for data struct */
     list *current = head ;
     symbol *symcurrent = symhead ;
     symbol *symhelper = symhead ; /* for macro */ 
     data *datacurrent = datahead ;
     while(current != NULL) /* scaning all the words in the prog */
     { 
-        if (current -> word[strlen(current -> word) - 1] == '\n') 
+        if (current -> word[strlen(current -> word) - 1] == '\n') /* end of line */ 
         cntln++ ;
         if (strcmp(current -> word,".define") == 0) /* case macro */
             {
                 current = current -> next ; /* geting the name */
-                strcpy(symcurrent ->name ,current -> word) ;
+                strcpy(symcurrent ->name ,current -> word) ; /* save name */
                 current = current -> next -> next ; /* after the name it will always be = "num" */
-                symcurrent -> value = atoi(current -> word) ;
+                symcurrent -> value = atoi(current -> word) ; /* convert to int */
                 symcurrent -> type = macro ;
                 /*symcurrent -> cmtype = none ;*/
                 symcurrent-> next = malloc(sizeof(symbol)) ;
@@ -25,11 +25,11 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                 
             }
         else
-        if (strcmp(current -> word,".extern") == 0) 
+        if (strcmp(current -> word,".extern") == 0) /* case .extern */ 
             {
-                current = current -> next ; /* geting the name */
+                current = current -> next ; /* next word after .extern supposed to be the name */
                 cntln++ ; /* name is end of line */
-                strcpy(symcurrent ->name ,current -> word) ;
+                strcpy(symcurrent ->name ,current -> word) ;/* save name*/ 
                 
                 symcurrent -> value = 0 ;
                 
@@ -38,12 +38,12 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                 symcurrent = symcurrent-> next ;
             } 
         else    
-        if (strchr(current -> word,':') != NULL)
+        if (strchr(current -> word,':') != NULL) /* case symbol */ 
         {
-                symcurrent -> name = strtok(current -> word , ':') ;
-                strcpy(savename,symcurrent -> name) ;    
+                symcurrent -> name = strtok(current -> word , ':') ; /*omiting ':' */
+                strcpy(savename,symcurrent -> name) ;    /* saving name for data */ 
                 symcurrent -> value = ic ;
-                if(strcmp(current -> next -> word,".data") == 0
+                if(strcmp(current -> next -> word,".data") == 0 /* case instruct */ 
                 || strcmp(current -> next -> word,".string") == 0
                 || strcmp(current -> next -> word,".entry") == 0
                 || strcmp(current -> next -> word,".extern") == 0
@@ -60,12 +60,12 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         else
         if(strcmp(current -> word,".data") == 0) 
         {
-            current = current -> next ;
+            current = current -> next ; /* the Variables comes after the word .data */ 
             cntln++ ;
             i = 0 ; 
-            while(current -> word[strlen(current -> word) - 1] != '\n') 
+            while(current -> word[strlen(current -> word) - 1] != '\n') /* stops at the end of line */ 
             {
-                if(isdigit(current -> word[0]) || current -> word[0] == '-' ||current -> word[0] == '+')
+                if(isdigit(current -> word[0]) || current -> word[0] == '-' ||current -> word[0] == '+') /* case number */ 
                 {
                  strcpy(datacurrent -> name ,savename) ;
                  datacurrent -> index = i ; 
@@ -78,9 +78,9 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                 }
                 else
                 {
-                    if(strcmp(current -> word,",") != 0)
+                    if(strcmp(current -> word,",") != 0) /* case macro */ 
                     {
-                    symhelper = symhead ;
+                    symhelper = symhead ; /* helps search in the sym struct for macro , cant use macro without defining him first */  
                     while(symhelper != NULL) 
                     {
                         if(strcmp(symhelper -> name,current -> word) == 0)

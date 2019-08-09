@@ -111,7 +111,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                 current = current -> next ;
                     
             }
-            current = current -> next ;
+           /* current = current -> next ;*/
         }
         else
         if(strcmp(current -> word,".string") == 0) 
@@ -133,7 +133,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                  
                  j++ ;
             }
-            current = current -> next ;
+           /* current = current -> next ; */
         }
         else
         if(conv_enum(current -> word) != NONE)

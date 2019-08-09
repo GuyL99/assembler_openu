@@ -8,7 +8,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
     symbol *symhelper = symhead ; /* for macro */ 
     data *datacurrent = datahead ;
     while(current != NULL) /* scaning all the words in the prog */
-    {
+    { 
         if (current -> word[strlen(current -> word) - 1] == '\n') 
         cntln++ ;
         if (strcmp(current -> word,".define") == 0) /* case macro */
@@ -40,8 +40,8 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         else    
         if (strchr(current -> word,':') != NULL)
         {
-                strncpy(symcurrent ->name ,current -> word,strlen(current -> word) - 1) ;/*without the ":"  */
-                strncpy(savename,symcurrent ->name,strlen(current -> word) - 1) ;
+                symcurrent -> name = strtok(current -> word , ':') ;
+                strcpy(savename,symcurrent -> name) ;    
                 symcurrent -> value = ic ;
                 if(strcmp(current -> next -> word,".data") == 0
                 || strcmp(current -> next -> word,".string") == 0

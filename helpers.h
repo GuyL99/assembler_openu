@@ -62,6 +62,8 @@ const static struct {
     {jsr, "jsr"},
     {rts, "rts"},
     {stop, "stop"},
+    {rts, "rts\n"},
+    {stop, "stop\n"},
 };
 command conv_enum (const char *str)
 {

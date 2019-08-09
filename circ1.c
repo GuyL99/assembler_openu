@@ -88,12 +88,12 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                             strcpy(datacurrent -> name ,savename) ;
                             datacurrent -> index = i ; 
                              i++ ; 
-                            datacurrent -> val = symhelper -> value ;
+                            datacurrent -> val = symhelper -> value ; /* the value of the macro */ 
                             datacurrent -> type = tdata;
                             datacurrent-> next = malloc(sizeof(data)) ;
                             datacurrent = datacurrent -> next ;
                             dc++ ;
-                            break ;
+                            break ; /* stop the search */  
                         }
                         else
                         {
@@ -108,7 +108,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                     }
                     }
                 }
-                current = current -> next ;
+                current = current -> next ; 
                     
             }
            /* current = current -> next ;*/
@@ -118,8 +118,8 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         {
             current = current -> next ;
         /*    cntln ;*/
-            i = 0 ;
-            j = 1 ; 
+            i = 0 ; /* index inside data */ 
+            j = 1 ; /* start at char[1] */
             while(j < strlen(current -> word) - 1)/* not including the lest and first chaer wich is " */
             {
               strcpy(datacurrent -> name ,savename) ;
@@ -136,26 +136,26 @@ int circ1(list *head , symbol *symhead,data *datahead ){
            /* current = current -> next ; */
         }
         else
-        if(conv_enum(current -> word) != NONE)
+        if(conv_enum(current -> word) != NONE) /* case command */ 
         ic++ ;
         else
-        if (strchr(current -> word,'[') != NULL &&  (strchr(current -> word,']') != NULL))
+        if (strchr(current -> word,'[') != NULL &&  (strchr(current -> word,']') != NULL)) /* case arry */ 
         ic = ic + 2 ;
         else
-        if(conv_enum3(current -> word) != rNONE)
+        if(conv_enum3(current -> word) != rNONE) /* case register */ 
         {
             if (strcmp(current -> next -> word , ",") == 0 && conv_enum3(current -> next -> next -> word) != rNONE)
             {
-                current = current -> next -> next ; /*making sure i dont count twice if i have 2 registers  */
+                current = current -> next -> next ; /*making sure i dont count twice if i have 2 registers in succession  */
             }
             ic++ ;
         }
         else
         ic ++ ;
         
-        current = current -> next ;
+        current = current -> next ; /* next word */ 
     }
     
-    return haserror ; 
+    return haserror ; /* retrun 0 if there are errors */  
     
 }

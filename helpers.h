@@ -7,6 +7,10 @@
 
 #define FALSE 0
 #define TRUE 1
+#define start 100 
+#define namelen 31
+#define codelen 14
+
 typedef enum {mov,cmp,add,sub,not,clr,lea,inc,dec,jmp,bne,red,prn,jsr,rts,stop,NONE} command;
 typedef enum {A,R,E}ARE;
 typedef enum {instrct,cmnd,macro,external} symerer;
@@ -14,25 +18,25 @@ typedef enum {tdata,tstring}diffing;
 typedef enum {define,dat,str,ent,ext, None} insmac;
 typedef enum {r0,r1,r2,r3,r4,r5,r6,r7,rNONE}regis;
 typedef struct sym{
-	char name[31];
+	char name[namelen];
 	unsigned int value;
 /*we are assuming a size of program between 1 and 156 instructuins*/	
 	unsigned int type;
 	struct sym *next;
 } symbol;
-#define start 100 
+
 typedef struct code{
 	/*int machine_code;*/
-	unsigned int machine_code[14];
+	unsigned int machine_code[codelen];
 	struct code *next;
 } code;
 typedef struct list{
 	struct list *next;
-	char word[31];
+	char word[namelen];
 } list;
 typedef struct data{
 	unsigned int index;	
-	char name[31];
+	char name[namelen];
 	int val ;	
 	diffing type;
 	struct data *next;

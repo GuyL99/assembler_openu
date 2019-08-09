@@ -5,8 +5,8 @@
 
 int main(){
 	struct list *head_list = (struct list*)malloc(sizeof(struct list));
-	int pre_valid = prerun(head_list);
-	symbol *head_sym = (symbol*)malloc(sizeof(symbol));
+	int pre_valid = prerun(head_list); /* making a struct of all the words in the file , without white noise, returning  */ 
+	symbol *head_sym = (symbol*)malloc(sizeof(symbol)); 
         data *head_dat = (data*)malloc(sizeof(data));
 	int circ1_valid;
 	int circ2_valid;

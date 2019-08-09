@@ -1,8 +1,8 @@
 #include "helpers.h"
 int circ1(list *head , symbol *symhead,data *datahead ){
-    int ic = 100,dc = 0 ; 
+    int ic = startic ,dc = 0 ; 
     int i , j , haserror = 1 , cntln = 0;
-    char savename[31] ; /* the name for data struct */
+    char savename[namelen] ; /* the name for data struct */
     list *current = head ;
     symbol *symcurrent = symhead ;
     symbol *symhelper = symhead ; /* for macro */ 

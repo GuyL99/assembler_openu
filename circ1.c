@@ -1,6 +1,6 @@
 #include "helpers.h"
 int circ1(list *head , symbol *symhead,data *datahead ){
-    int ic = startic ,dc = 0 ; 
+    int ic = start ,dc = 0 ; 
     int i , j , haserror = 1 , cntln = 0;
     char savename[namelen] ; /* the name for data struct */
     list *current = head ;

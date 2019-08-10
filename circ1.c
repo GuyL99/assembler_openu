@@ -2,6 +2,7 @@
 int circ1(list *head , symbol *symhead,data *datahead ){
     int ic = start ,dc = 0 ; 
     int i , j , haserror = 1 , cntln = 0;
+    int datahelp = TRUE ;
     char savename[namelen] ; /* the name for data struct */
     list *current = head -> next ; /* always start with empty word */
     symbol *symcurrent = symhead ;
@@ -67,8 +68,10 @@ int circ1(list *head , symbol *symhead,data *datahead ){
             current = current -> next ; /* the Variables comes after the word .data */ 
             cntln++ ;
             i = 0 ; 
-            while(current -> word[strlen(current -> word) - 1] != '\n') /* stops at the end of line */ 
+            while(datahelp) /* stops at the end of line */ 
             {
+                if(current -> word[strlen(current -> word) - 1] != '\n')/* last word is end of line so making sure to enter the loop */
+                    datahelp = FALSE ;
                 if(isdigit(current -> word[0]) || current -> word[0] == '-' ||current -> word[0] == '+') /* case number */ 
                 {
                  strcpy(datacurrent -> name ,savename) ;

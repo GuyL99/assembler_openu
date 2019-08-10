@@ -140,7 +140,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         /*    cntln ;*/
             i = 0 ; /* index inside data */ 
             j = 1 ; /* start at char[1] */
-            while(j < strlen(current -> word) - 1)/* not including the lest and first chaer wich is " */
+            while(j < strlen(current -> word) - 2)/* not including the lest and first chaer wich is " */
             {
               strcpy(datacurrent -> name ,savename) ;
                  datacurrent -> index = i ; 
@@ -153,6 +153,16 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                  
                  j++ ;
             }
+            strcpy(datacurrent -> name ,savename) ;
+                 datacurrent -> index = i ; 
+                 i++ ; 
+                 datacurrent -> val = (int) ('0') ;
+                 datacurrent -> type = tstring;
+                 datacurrent-> next = malloc(sizeof(data)) ;
+                 datacurrent = datacurrent -> next ;
+                 dc++ ; 
+                 
+                 j++ ;
            /* current = current -> next ; */
         }
         else

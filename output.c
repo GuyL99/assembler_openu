@@ -23,8 +23,7 @@ void write_code_to_file(int n,int ic){
         char conv[convertlen] ;
 	if(n < 0 )
 	{
-		n <<= 2 ;
-		n >>= 2 ;
+		n= n & MAXDAVEL ;
 	}
         while(n)
         {

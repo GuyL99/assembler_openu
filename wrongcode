@@ -4,19 +4,22 @@
 .entry   LIST
 .extern  W
 .define  sz = 2
-.define size = 8 
-MAIN:    mov r3, LIST[sz]
-LOOP:    jmp W
+.define size  8 
+MAIN:    mov r3 LIST[sz]
+LOOP    jmp W
          prn #-5
- 	 mov STR[5], STR[2]
-         sub r1,r4
+ 	 mov STR[], STR[2]
+         sub r1,
+         prn #HI
+ .define HI
          cmp K, #sz 
-         mov #-1,r6
-         mov #size, r5
+         move #-1,r6
+         mov size, r5
          add r6,r5
-                  lea sz , r4
+ a                 lea sz , r4
          bne W
          not r3
+         mov arr[7], arr[2]
 L1:	 inc L3
 .entry LOOP
          bne LOOP

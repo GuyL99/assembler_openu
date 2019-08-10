@@ -69,14 +69,14 @@ int circ1(list *head , symbol *symhead,data *datahead ){
             current = current -> next ; /* the Variables comes after the word .data */ 
             cntln++ ;
             i = 0 ; 
-            datahelp = TRUE ;
-            strcpy(endln , "                              ") ;
+            datahelp = TRUE ; /* helps detrmin if we are at the end of the line */
+            strcpy(endln , "                              ") ;/* making sure the word is empty */
             while(datahelp) /* stops at the end of line */ 
             {
                 if(current -> word[strlen(current -> word) - 1] == '\n')/* last word is end of line so making sure to enter the loop */
                 {
                 datahelp = FALSE ;
-                for (l=0;l < strlen(current -> word)-1;l++)
+                for (l=0;l < strlen(current -> word)-1;l++) /* copying the name without \n */ 
                 endln[l] = current -> word[l]  ;
                 endln[l] = '\0' ;
                 }
@@ -85,7 +85,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                  strcpy(datacurrent -> name ,savename) ;
                  datacurrent -> index = i ; 
                  i++ ; 
-                 if (datahelp)
+                 if (datahelp) /* end line or not */
                  datacurrent -> val = atoi(current ->word) ;
                  else
                  datacurrent -> val = atoi(endln) ;
@@ -104,7 +104,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                     {
                         if(strcmp(symhelper -> name,current -> word) == 0 || (strcmp(symhelper -> name,endln) == 0 && datahelp == FALSE) )
                         {
-                            strcpy(datacurrent -> name ,savename) ;
+                            strcpy(datacurrent -> name ,savename) ; /* entering the saved name from previous loop */
                             datacurrent -> index = i ; 
                              i++ ; 
                             datacurrent -> val = symhelper -> value ; /* the value of the macro */ 
@@ -127,7 +127,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                     }
                     }
                 }
-                if(datahelp)
+                if(datahelp) /* start new line at the end of the while , not here */
                 current = current -> next ; 
                     
             }
@@ -153,7 +153,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                  
                  j++ ;
             }
-            strcpy(datacurrent -> name ,savename) ;
+            strcpy(datacurrent -> name ,savename) ; /* entering 0 to mark end of string */
                  datacurrent -> index = i ; 
                  i++ ; 
                  datacurrent -> val = (int) ('0') ;

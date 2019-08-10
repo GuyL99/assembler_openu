@@ -5,10 +5,14 @@ void print_to_ee(char name1[namelen], int valer,int ic){
 	int i;
 	/*same type of writing into file, just needed to tweek the file name so..*/
 	/*making a new string without "\n"*/
-	for(i=0;i<strlen(name1)-1;i++){
-		name2[i]=name1[i];
+	if(name1[strlen(name1)-1]=='\n'){
+		for(i=0;i<strlen(name1)-1;i++){
+			name2[i]=name1[i];
+		}
+		name2[i]='\0';
+	}else{
+		strcpy(name2,name1);
 	}
-	name2[i]='\0';
 	if(valer){
 		FP = fopen("machine.ent","a");
 	}else{

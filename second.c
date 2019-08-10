@@ -449,6 +449,7 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 	int ic = start ;
 	int dc = 1 ;
 	int l ;
+	char endln[namelen];
 	while (curr){
 		switch(conv_enum(curr->word)){
 			case mov:	
@@ -507,30 +508,30 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 		}
 		if(strcmp(curr -> word , ".entry") == 0) /* case .ent file */
 		{
-			for (l=0;l < strlen(current -> next -> word)-1;l++)
-                	endln[l] = current -> next -> word[l]  ;
+			for (l=0;l < strlen(curr -> next -> word)-1;l++){
+                		endln[l] = curr -> next -> word[l]  ;
+			}
                 	endln[l] = '\0' ; /* word without \n */ 
-                
 			symcurrent =head_s ;
-			while(symcurrent != NULL) ;/* serch symbol table */
+			while(symcurrent != NULL) /* serch symbol table */
 			{
-				if(strcmp(endln,symcurrent -> name)
+				if(!strcmp(endln,symcurrent -> name)){
 				   break ;
+				  }
 				symcurrent = symcurrent -> next ;   
 			}
 			if(symcurrent != NULL)/* print if found */
-			print_to_ee(symcurrent -> name, 0 ,symcurrent -> value) ;
+			print_to_ee(endln, 1 ,symcurrent -> value) ;
 			else 
 			printf("Error entry not found.\n");
-		}
 		}
 		curr = curr->next;
         }
 	while(datacurrent -> next != NULL) /* writing the data at the end of file */
-   	 {
-        	write_code_to_file(datacurrent -> val  , ic+dc) ;
+   	{
+        	write_code_to_file(datacurrent -> val  , ic+dc-1) ;
       		datacurrent = datacurrent -> next ;
        	        dc++ ;
-   	 }
+   	}
 	return 1;
 }

@@ -70,7 +70,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
             i = 0 ; 
             while(datahelp) /* stops at the end of line */ 
             {
-                if(current -> word[strlen(current -> word) - 1] != '\n')/* last word is end of line so making sure to enter the loop */
+                if(current -> word[strlen(current -> word) - 1] == '\n')/* last word is end of line so making sure to enter the loop */
                     datahelp = FALSE ;
                 if(isdigit(current -> word[0]) || current -> word[0] == '-' ||current -> word[0] == '+') /* case number */ 
                 {

@@ -18,7 +18,7 @@ int symch(symbol *symhead)
         }
         if (count > 0) 
         {
-        printf(symbol %s is writen Twice  n,symcurrent -> name) ;
+        printf("symbol %s is writen Twice  \n",symcurrent -> name) ;
         haserror = 0 ;
         }
         symcurrent = symcurrent -> next ;

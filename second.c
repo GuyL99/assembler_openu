@@ -1,15 +1,16 @@
 #include "output.c"
 #include "helpers.h"
 int check_miun(char word[namelen]){
+	/*this function says that if the code has gotten to this point it has to have miun- so:*/
 	int i;
 	int flag = 0;
-	if(word[0] == '#'){
+	if(word[0] == '#'){/*immidiate*/
 		return 0;
 	}
-	if(conv_enum3(word)!=rNONE){
+	if(conv_enum3(word)!=rNONE){/*register trace*/
 		return 3;
 	}
-	for(i=0;i<strlen(word);i++){
+	for(i=0;i<strlen(word);i++){/*checking if it has [ so it would be declares as fixed index*/
 		if(word[i] == '['){
 			flag = 1;
 			break;
@@ -17,11 +18,12 @@ int check_miun(char word[namelen]){
 	}
 	if(flag){
 		return 2;
-	} 
+	} /*if nothing special matches it's direct*/ 
 	return 1;
 
 }
 int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
+	/*variables*/
 	int m_code=0;
 	list *curr = currr;
 	symbol *curr_sym = head_sym;
@@ -34,27 +36,34 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 	char s_word2[namelen];
 	int foundFLAG = 0;
 	int negFLAG = 0;
+	/*coding the operation*/
 	m_code|=type_m2<<MIUNTWOBIT;
 	m_code|=type_m<<MIUNONEBIT;
 	m_code|=opcode<<OPBIT;
+	/*writing it*/
 	write_code_to_file(m_code,ic);
 	m_code = 0;
 	++ic;
 	curr = curr->next;
+	/*now at the operands*/
 	switch(type_m){
 		case 3:
-			m_code|=conv_enum3(curr->word)<<5;
+			/*coding the register and checking whether a second register is in this line and if it is it codes it to the same line and raises a flag*/
+			m_code|=conv_enum3(curr->word)<<REGONEBIT;
 			if(type_m==type_m2){
-				m_code|=conv_enum3(curr->next->next->word)<<2;
+				m_code|=conv_enum3(curr->next->next->word)<<REGTWOBIT;
 				coded = TRUE;
 			}
+			/*writing to file and counting the ic*/
 			write_code_to_file(m_code,ic);
 			ic++;
 			break;
 		case 2:
+			/*seprating the calls to the array into the array name and index*/
 			strcpy(first_ind,strtok(curr->word,"["));
 			strcpy(second_ind,strtok(NULL,"]"));
 			m_code = 0;
+			/*checking the array and coding it accordingly*/
 			while(curr_sym){
 				if(!strcmp(curr_sym->name,first_ind)){
 					if(curr_sym->type == external){
@@ -77,6 +86,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 			write_code_to_file(m_code,ic);
 			ic++;
 			m_code = 0;
+			/*checking if the index is a digit or a saved name and if it's a saved name it's checking for the value attached*/
 			if(!isdigit(second_ind[0])){
 				while(curr_sym){
                                 	if(!strcmp(curr_sym->name,second_ind)){
@@ -103,6 +113,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 			ic++;
 			break;
 		case 1:
+			/*if its a direct one then all i need to do is code the address and move on...*/
 			strcpy(s_word,curr->word);
 			m_code=2;
 			while(curr_sym){
@@ -122,21 +133,18 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 			ic++;
 			break;
 		case 0:
+			/*seperating the string into the piece that came after the # if it's not a number and coding the value attached*/
 			strcpy(s_word,strtok(curr->word,"#"));
 			if(s_word[0]=='-'){
+				/*raising a negativity flag*/
 				negFLAG =1;
 				strcpy(s_word,strtok(s_word,"-"));
 			}else if(s_word[0]=='+'){
 				strcpy(s_word,strtok(s_word,"+"));
 			}
-			if (s_word[strlen(s_word)-1] == '\n'){
-				strncpy(s_word2,s_word,strlen(s_word)-1);
-			}else{
-				strcpy(s_word2,s_word);
-			}
-			if(!isdigit(s_word2[0])){
+			if(!isdigit(s_word[0])){
 				while(curr_sym){
-                                	if(!strcmp(curr_sym->name,s_word2)){
+                                	if(!strcmp(curr_sym->name,s_word)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
 							print_to_ee(curr_sym->name,0,ic);
@@ -154,6 +162,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 					return -1;
 				}
                 	}else{
+				/*this is interesting I am claulating the bits of this number (negative) or 16 bit minus positive as if it was a 4096 2^12 12 bits*/
 				if(negFLAG){
                 			m_code|=(MAXERVAL-1*atoi(s_word2))<<NUMBIT;
 				}else{
@@ -166,6 +175,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                 	ic++;
                 	break;
 	}
+/*reiniting variables*/
 	m_code = 0;
 	curr_sym = head_sym;
 	curr = curr->next->next;
@@ -175,6 +185,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 	memset(s_word2, '\0', sizeof s_word2);
 	switch(type_m2){
         	case 3:
+		/*checking whether the reg is already coded and if not then codes it*/
 			if(!coded){
         			m_code|=conv_enum3(curr->word)<<5;
         			write_code_to_file(m_code,ic);
@@ -182,6 +193,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 			}
         		break;
         	case 2:
+			/*same as above*/
         		strcpy(first_ind,strtok(curr->word,"["));
         		strcpy(second_ind,strtok(NULL,"]"));
         		while(curr_sym){
@@ -233,6 +245,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         		ic++;
         		break;
         	case 1:
+			/*same as above*/
         		strcpy(s_word,curr->word);
         		m_code=2;
         		while(curr_sym){
@@ -252,6 +265,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         		ic++;
         		break;
         	case 0:
+			/*same as above*/
         		strcpy(s_word,strtok(curr->word,"#"));
         		if(s_word[0]=='-'){
         			negFLAG =1;
@@ -259,6 +273,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         		}else if(s_word[0]=='+'){
         			strcpy(s_word,strtok(s_word,"+"));
         		}
+			/*checking if the word is \ned and if it is then dumps it*/
         		if (s_word[strlen(s_word)-1] == '\n'){
         			strncpy(s_word2,s_word,strlen(s_word)-1);
         		}else{
@@ -318,11 +333,13 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 	++ic;
 	switch(type_m){
         	case 3:
-        		m_code|=conv_enum3(curr->word)<<5;
+			/*just codes the reg*/
+        		m_code|=conv_enum3(curr->word)<<REGONEBIT;
         		write_code_to_file(m_code,ic);
         		ic++;
         		break;
         	case 2:
+			/*same as case 2 above*/
         		strcpy(first_ind,strtok(curr->word,"["));
         		strcpy(second_ind,strtok(NULL,"]"));
         		while(curr_sym){
@@ -372,6 +389,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         		ic++;
         		break;
         	case 1:
+			/*same as case 1 above*/
         		m_code=2;
 			strcpy(s_word,curr->word);
         		if (s_word[strlen(s_word)-1] == '\n'){
@@ -394,6 +412,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         		ic++;
         		break;
         	case 0:
+			/*same as case 0 of the second operand*/
 			strcpy(s_word,strtok(curr->word,"#"));
 			if(s_word[0]=='-'){
 				negFLAG =1;
@@ -435,6 +454,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 
 
 int type_three_code(int opcode, int ic){
+	/*in type three I only need to code the opcode*/
 	int m_code=0;
         m_code|=opcode<<OPBIT;
         write_code_to_file(m_code,ic);
@@ -451,6 +471,8 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 	int l ;
 	char endln[namelen];
 	while (curr){
+		/* I again broke the code into three types type 1-2 operands operation, type 2 - 1 operand operation and type 3 - no operand operation' those are distinguishable by the way one should code them because for one the number of lines needed to code them, the number of nexts to use and such and such...*/
+		/*I counted ic and returned current ic from every function*/
 		switch(conv_enum(curr->word)){
 			case mov:	
 				ic = type_one_code(curr,0,head_s,ic);

@@ -21,6 +21,8 @@
 #define MAXERVAL 4096 /*value used for codeing the negative numbers with cropped edges 2^12 as the 12 bits that remain to code them in*/
 /*enum for opcodes(easier to code and read this way)*/
 #define MAXDAVEL 16383 /*value used for codeing the negative numbers with cropped edges 2^14 */
+#define REGONEBIT 5 /*value used for codeing the first register */
+#define REGTWOBIT 2 /*value used for codeing the second register */
 typedef enum {mov,cmp,add,sub,not,clr,lea,inc,dec,jmp,bne,red,prn,jsr,rts,stop,NONE} command;
 /*enum for symbol types*/
 typedef enum {instrct,cmnd,macro,external} symerer;

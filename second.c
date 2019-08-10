@@ -445,8 +445,10 @@ int type_three_code(int opcode, int ic){
 int circ2(list *head_list, data *head_data, symbol *head_s){
 	list *curr = head_list;
 	data *datacurrent = head_data ;
+	symbol *symcurrent =head_s ;
 	int ic = start ;
 	int dc = 1 ;
+	int l ;
 	while (curr){
 		switch(conv_enum(curr->word)){
 			case mov:	
@@ -503,9 +505,28 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 		if (ic==-1){
 			return 0;
 		}
-        	curr = curr->next;
+		if(strcmp(curr -> word , ".entry") == 0) /* case .ent file */
+		{
+			for (l=0;l < strlen(current -> next -> word)-1;l++)
+                	endln[l] = current -> next -> word[l]  ;
+                	endln[l] = '\0' ; /* word without \n */ 
+                
+			symcurrent =head_s ;
+			while(symcurrent != NULL) ;/* serch symbol table */
+			{
+				if(strcmp(endln,symcurrent -> name)
+				   break ;
+				symcurrent = symcurrent -> next ;   
+			}
+			if(symcurrent != NULL)/* print if found */
+			print_to_ee(symcurrent -> name, 0 ,symcurrent -> value) ;
+			else 
+			printf("Error entry not found.\n");
+		}
+		}
+		curr = curr->next;
         }
-	while(datacurrent -> next != NULL)
+	while(datacurrent -> next != NULL) /* writing the data at the end of file */
    	 {
         	write_code_to_file(datacurrent -> val  , ic+dc) ;
       		datacurrent = datacurrent -> next ;

@@ -1,5 +1,5 @@
 #include "helpers.h"
-int symch(symbol symhead)
+int symch(symbol *symhead)
 {
     symbol *symcurrent = symhead ;
     symbol *symhelper ;

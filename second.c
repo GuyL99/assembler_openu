@@ -364,8 +364,13 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         	case 1:
         		m_code=2;
 			strcpy(s_word,curr->word);
+        		if (s_word[strlen(s_word)-1] == '\n'){
+        			strncpy(s_word2,s_word,strlen(s_word)-1);
+        		}else{
+        			strcpy(s_word2,s_word);
+        		}
         		while(curr_sym){
-                        	if(!strcmp(curr_sym->name,s_word)){
+                        	if(!strcmp(curr_sym->name,s_word) || !strcmp(curr_sym->name,s_word2)){
 					if(curr_sym->type == external){
                         			m_code=EXTERNVAL;
                         		}else{

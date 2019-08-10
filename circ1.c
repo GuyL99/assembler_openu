@@ -3,7 +3,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
     int ic = start ,dc = 0 ; 
     int i , j , haserror = 1 , cntln = 0;
     char savename[namelen] ; /* the name for data struct */
-    list *current = head ;
+    list *current = head -> next ; /* always start with empty word */
     symbol *symcurrent = symhead ;
     symbol *symhelper = symhead ; /* for macro */ 
     data *datacurrent = datahead ;
@@ -137,7 +137,9 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         }
         else
         if(conv_enum(current -> word) != NONE) /* case command */ 
+        {
         ic++ ;
+        }
         else
         if (strchr(current -> word,'[') != NULL &&  (strchr(current -> word,']') != NULL)) /* case arry */ 
         ic = ic + 2 ;
@@ -151,8 +153,13 @@ int circ1(list *head , symbol *symhead,data *datahead ){
             ic++ ;
         }
         else
+        if (strcmp(current -> word,".entry") == 0)
+        {
+          current = current -> next  ;/* entry doesnt efect ic */  
+        }
+        else{
         ic ++ ;
-        
+        }
         current = current -> next ; /* next word */ 
     }
     

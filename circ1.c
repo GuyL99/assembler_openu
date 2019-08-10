@@ -1,9 +1,9 @@
 #include "helpers.h"
 int circ1(list *head , symbol *symhead,data *datahead ){
     int ic = start ,dc = 0 ; 
-    int i , j , haserror = 1 , cntln = 0;
+    int i , j , l , haserror = 1 , cntln = 0;
     int datahelp = TRUE ;
-    char savename[namelen] ; /* the name for data struct */
+    char savename[namelen] , endln[namelen] ; /* the name for data struct */
     list *current = head -> next ; /* always start with empty word */
     symbol *symcurrent = symhead ;
     symbol *symhelper = symhead ; /* for macro */ 
@@ -65,19 +65,31 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         else
         if(strcmp(current -> word,".data") == 0) 
         {
+            
             current = current -> next ; /* the Variables comes after the word .data */ 
             cntln++ ;
             i = 0 ; 
+            datahelp = TRUE ;
+            strcpy(endln , "                              ") ;
             while(datahelp) /* stops at the end of line */ 
             {
                 if(current -> word[strlen(current -> word) - 1] == '\n')/* last word is end of line so making sure to enter the loop */
-                    datahelp = FALSE ;
+                {
+                datahelp = FALSE ;
+                for (l=0;l < strlen(current -> word)-1;l++)
+                endln[l] = current -> word[l]  ;
+                endln[l] = '\0' ;
+                }
                 if(isdigit(current -> word[0]) || current -> word[0] == '-' ||current -> word[0] == '+') /* case number */ 
                 {
                  strcpy(datacurrent -> name ,savename) ;
                  datacurrent -> index = i ; 
                  i++ ; 
+                 if (datahelp)
                  datacurrent -> val = atoi(current ->word) ;
+                 else
+                 datacurrent -> val = atoi(endln) ;
+                 
                  datacurrent -> type = tdata;
                  datacurrent-> next = malloc(sizeof(data)) ;
                  datacurrent = datacurrent -> next ;
@@ -90,7 +102,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                     symhelper = symhead ; /* helps search in the sym struct for macro , cant use macro without defining him first */  
                     while(symhelper != NULL) 
                     {
-                        if(strcmp(symhelper -> name,current -> word) == 0)
+                        if(strcmp(symhelper -> name,current -> word) == 0 || (strcmp(symhelper -> name,endln) == 0 && datahelp == FALSE) )
                         {
                             strcpy(datacurrent -> name ,savename) ;
                             datacurrent -> index = i ; 
@@ -115,6 +127,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                     }
                     }
                 }
+                if(datahelp)
                 current = current -> next ; 
                     
             }
@@ -171,7 +184,21 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         }
         current = current -> next ; /* next word */ 
     }
+     datacurrent = datahead ;
+    while(datacurrent -> next != NULL)
+    {
+        printf(" %s , %d ", datacurrent -> name , datacurrent -> val) ;
+        datacurrent = datacurrent -> next ;
+        
+    }
+    current = head -> next ;
     
+    while(current != NULL)
+    {
+       printf(" %s ", current -> word) ;
+        current = current -> next ; 
+    }
     return haserror ; /* retrun 0 if there are errors */  
     
+
 }

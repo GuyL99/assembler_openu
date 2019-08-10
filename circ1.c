@@ -157,7 +157,9 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         {
           current = current -> next  ;/* entry doesnt efect ic */  
         }
-        else{
+        else
+        if (strcmp(current -> word,",") != 0)     
+        {
         ic ++ ;
         }
         current = current -> next ; /* next word */ 

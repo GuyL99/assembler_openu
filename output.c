@@ -21,6 +21,11 @@ void write_code_to_file(int n,int ic){
 	FILE * FP = NULL;
 	int temp , index = convertlen - 1;
         char conv[convertlen] ;
+	if(n < 0 )
+	{
+		n <<= 2 ;
+		n >>= 2 ;
+	}
         while(n)
         {
             temp = n & 3 ; /* 3 = 11 in binary */ 

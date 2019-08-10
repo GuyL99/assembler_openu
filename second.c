@@ -444,7 +444,9 @@ int type_three_code(int opcode, int ic){
 
 int circ2(list *head_list, data *head_data, symbol *head_s){
 	list *curr = head_list;
+	data *datacurrent = head_data ;
 	int ic = start ;
+	int dc = 1 ;
 	while (curr){
 		switch(conv_enum(curr->word)){
 			case mov:	
@@ -503,5 +505,11 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 		}
         	curr = curr->next;
         }
+	while(datacurrent -> next != NULL)
+   	 {
+        	write_code_to_file(datacurrent -> val  , ic+dc) ;
+      		datacurrent = datacurrent -> next ;
+       	        dc++ ;
+   	 }
 	return 1;
 }

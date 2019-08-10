@@ -250,7 +250,7 @@ int prerun(list *head_tot){
    	if (fp == NULL)
    	{
       		printf("Error while opening the file.\n");
-      		return 0;
+      		return -1;
    	}
 	if (head == NULL) {
         	printf("error whatever could'nt assgin mem");	

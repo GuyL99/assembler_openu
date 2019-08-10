@@ -31,12 +31,12 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 	char first_ind[namelen];
 	char second_ind[namelen];
 	char s_word[namelen];
-	int v = 0;
-	int u = 0;
+	char s_word2[namelen];
 	int foundFLAG = 0;
-	m_code|=type_m2<<2;
-	m_code|=type_m<<4;
-	m_code|=opcode<<6;
+	int negFLAG = 0;
+	m_code|=type_m2<<AREBIT;
+	m_code|=type_m<<MIUNTWOBIT;
+	m_code|=opcode<<MIUNONEBIT;
 	write_code_to_file(m_code,ic);
 	m_code = 0;
 	++ic;
@@ -54,13 +54,14 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 		case 2:
 			strcpy(first_ind,strtok(curr->word,"["));
 			strcpy(second_ind,strtok(NULL,"]"));
+			m_code = 0;
 			while(curr_sym){
 				if(!strcmp(curr_sym->name,first_ind)){
 					if(curr_sym->type == external){
 						m_code|=1;
 					}else{
-						m_code|=2;
-						m_code|=curr_sym->value<<2;
+						m_code=2;
+						m_code|=curr_sym->value<<ADDRBIT;
 					}
 					foundFLAG = 1;
 					break;
@@ -75,13 +76,13 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 			write_code_to_file(m_code,ic);
 			ic++;
 			m_code = 0;
-			if(!isdigit(second_ind)){
+			if(!isdigit(second_ind[0])){
 				while(curr_sym){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
                                 			m_code|=1;
                                 		}else{
-                                			m_code|=curr_sym->value<<2;
+                                			m_code|=curr_sym->value<<NUMBIT;
                                 		}
 						foundFLAG = 1;
                                                 break;                       
@@ -94,21 +95,21 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 				}
 				foundFLAG = 0;
         		}else{
-        			m_code|=atoi(curr->word);
+        			m_code|=atoi(second_ind)<<NUMBIT;
         		}
 			write_code_to_file(m_code,ic);
 			ic++;
 			break;
 		case 1:
 			strcpy(s_word,curr->word);
-			m_code|=2;
+			m_code=2;
 			while(curr_sym){
                         	if(!strcmp(curr_sym->name,s_word)){
                         		if(curr_sym->type == external){
 						m_code = 0;
                         			m_code|=1;
                         		}else{
-                        			m_code|=curr_sym->value<<2;
+                        			m_code|=curr_sym->value<<ADDRBIT;
                         		}
         				write_code_to_file(m_code,ic);
 					break;
@@ -119,138 +120,180 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 			ic++;
 			break;
 		case 0:
-			if(!isdigit(curr->word)){
-				strcpy(s_word,strtok(curr->word,"#"));
+			strcpy(s_word,strtok(curr->word,"#"));
+			if(s_word[0]=='-'){
+				negFLAG =1;
+				strcpy(s_word,strtok(s_word,"-"));
+			}else if(s_word[0]=='+'){
+				strcpy(s_word,strtok(s_word,"+"));
+			}
+			if (s_word[strlen(s_word)-1] == '\n'){
+				strncpy(s_word2,s_word,strlen(s_word)-1);
+			}else{
+				strcpy(s_word2,s_word);
+			}
+			if(!isdigit(s_word2[0])){
 				while(curr_sym){
-                                	if(!strcmp(curr_sym->name,s_word)){
+                                	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
-                                			m_code|=1;
+                                			m_code|=EXTERNVAL;
                                 		}else{
-                                			m_code|=curr_sym->value<<2;
+                                			m_code|=curr_sym->value;
                                 		}
+						foundFLAG = 1;
 						break;
                                                                                    
                                 	}
                                 	curr_sym = curr_sym->next;
+                		}
+				if(!foundFLAG){
+					printf("error - symbol %s not found, current ic is %d\n",s_word2,ic);
+					return -1;
 				}
-			}else{
-				m_code|=atoi(curr->word);
-			}
+                	}else{
+				if(negFLAG){
+                			m_code|=(-1*atoi(s_word2))<<NUMBIT;
+				}else{
+                			m_code|=atoi(s_word2)<<NUMBIT;
+				}
+                	}
+			foundFLAG = 0;
+			negFLAG = 0;
         		write_code_to_file(m_code,ic);
-			ic++;
-			break;
+                	ic++;
+                	break;
 	}
 	m_code = 0;
 	curr_sym = head_sym;
 	curr = curr->next->next;
 	memset(first_ind, '\0', sizeof first_ind);
 	memset(second_ind, '\0', sizeof second_ind);
+	memset(s_word, '\0', sizeof s_word);
+	memset(s_word2, '\0', sizeof s_word2);
 	switch(type_m2){
-		case 3:
+        	case 3:
 			if(!coded){
-				m_code|=conv_enum3(curr->word)<<2;
+        			m_code|=conv_enum3(curr->word)<<5;
         			write_code_to_file(m_code,ic);
-				ic++;
+        			ic++;
 			}
-			break;
-		case 2:
-			while(curr->word[v]!='['){                                       	
-                		first_ind[v] = curr->word[v];
-                		v++;	
-                	}
-                	v++;
-                	while(curr->word[v]!=']'){
-                		second_ind[u] = curr->word[v];
-                		u++;
-                		v++;
-                	}
-                	while(curr_sym){
-                		if(!strcmp(curr_sym->name,first_ind)){
-                			if(curr_sym->type == external){
-                				m_code|=1;
-                			}else{
-                				m_code|=2;
-                				m_code|=curr_sym->value<<2;
-                			}
-					foundFLAG =1;
-					break;
-                                                                                          
-                		}
-                		curr_sym = curr_sym->next;
-                	}
-			if(!foundFLAG){
-				printf("error - symbol %s not found, current ic is %d\n",first_ind,ic);
-				return -1;
-			}
-			foundFLAG =0;
-                	write_code_to_file(m_code,ic);
+        		break;
+        	case 2:
+        		strcpy(first_ind,strtok(curr->word,"["));
+        		strcpy(second_ind,strtok(NULL,"]"));
+        		while(curr_sym){
+        			if(!strcmp(curr_sym->name,first_ind)){
+        				if(curr_sym->type == external){
+        					m_code|=EXTERNVAL;
+        				}else{
+        					m_code=2;
+        					m_code|=curr_sym->value<<ADDRBIT;
+        				}
+        				foundFLAG = 1;
+        				break;
+        			}
+        			curr_sym = curr_sym->next;
+        		}
+        		if(!foundFLAG){
+        			printf("error - symbol %s not found, current ic is %d\n",first_ind,ic);
+        			return -1;
+        		}
 			curr_sym = head_sym;
-			m_code = 0;
-                	ic++;
-                	if(!isdigit(second_ind)){
-                		while(curr_sym){
+        		foundFLAG = 0;
+        		write_code_to_file(m_code,ic);
+        		ic++;
+        		m_code = 0;
+        		if(!isdigit(second_ind[0])){
+        			while(curr_sym){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
                                 			m_code|=1;
                                 		}else{
-                                			m_code|=curr_sym->value<<2;
+                                			m_code|=curr_sym->value<<NUMBIT;
                                 		}
-						foundFLAG = 1;
-						break;
+        					foundFLAG = 1;
+                                                break;                       
                                 	}
                                 	curr_sym = curr_sym->next;
                                 }
-				if(!foundFLAG){
-					printf("error - symbol %s not found, current ic is %d\n",first_ind,ic);
-					return -1;
-				}
-				foundFLAG = 0;
+        			if(!foundFLAG){
+        				printf("error - symbol %s not found, current ic is %d\n",second_ind,ic);
+        				return -1;
+        			}
+        			foundFLAG = 0;
         		}else{
-        			m_code|=atoi(curr->word);
+        			m_code|=atoi(second_ind)<<NUMBIT;
         		}
-                	write_code_to_file(m_code,ic);
-                	ic++;
-                	break;
-                case 1:
-                	m_code|=2;
-			strcpy(s_word,curr->word);
-                	while(curr_sym){
-                        	if(!strcmp(curr_sym->name,s_word)){
+        		write_code_to_file(m_code,ic);
+        		ic++;
+        		break;
+        	case 1:
+        		strcpy(s_word,curr->word);
+			if (s_word[strlen(s_word)-1] == '\n'){
+				strncpy(s_word2,s_word,strlen(s_word)-1);
+			}else{
+				strcpy(s_word2,s_word);
+			}
+        		m_code=2;
+        		while(curr_sym){
+                        	if(!strcmp(curr_sym->name,s_word2)){
                         		if(curr_sym->type == external){
-						m_code=0;
-                        			m_code|=1;
+        					m_code = 0;
+                        			m_code|=EXTERNVAL;
                         		}else{
-                        			m_code|=curr_sym->value<<2;
+                        			m_code|=curr_sym->value<<ADDRBIT;
                         		}
         				write_code_to_file(m_code,ic);
-					break;
+        				break;
                                                                            
                         	}
                         	curr_sym = curr_sym->next;
                         }
-                	ic++;
-                	break;
-                case 0:
-                	if(!isdigit(curr->word)){
-                		while(curr_sym){
-                                	if(!strcmp(curr_sym->name,s_word)){
+        		ic++;
+        		break;
+        	case 0:
+        		strcpy(s_word,strtok(curr->word,"#"));
+        		if(s_word[0]=='-'){
+        			negFLAG =1;
+        			strcpy(s_word,strtok(s_word,"-"));
+        		}else if(s_word[0]=='+'){
+        			strcpy(s_word,strtok(s_word,"+"));
+        		}
+        		if (s_word[strlen(s_word)-1] == '\n'){
+        			strncpy(s_word2,s_word,strlen(s_word)-1);
+        		}else{
+        			strcpy(s_word2,s_word);
+        		}
+        		if(!isdigit(s_word2[0])){
+        			while(curr_sym){
+                                	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
-                                			m_code|=1;
+                                			m_code|=EXTERNVAL;
                                 		}else{
-                                			m_code|=curr_sym->value<<2;
+                                			m_code|=curr_sym->value<<NUMBIT;
                                 		}
-						break;
+        					foundFLAG = 1;
+        					break;
                                                                                    
                                 	}
                                 	curr_sym = curr_sym->next;
                 		}
+        			if(!foundFLAG){
+        				printf("error - symbol %s not found, current ic is %d\n",s_word2,ic);
+        				return -1;
+        			}
                 	}else{
-                		m_code|=atoi(curr->word);
+        			if(negFLAG){
+                			m_code|=(-1*atoi(s_word2))<<NUMBIT;
+        			}else{
+                			m_code|=atoi(s_word2)<<NUMBIT;
+        			}
                 	}
+        		foundFLAG = 0;
         		write_code_to_file(m_code,ic);
                 	ic++;
                 	break;
-	}
+        }
 	return ic;
 
 }
@@ -263,16 +306,15 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         char first_ind[namelen];
         char second_ind[namelen];
 	char s_word[namelen];
-        int v = 0;
-        int u = 0;
+	char s_word2[namelen];
         int foundFLAG = 0;
         int negFLAG = 0;
-	m_code|=type_m<<2;
-        m_code|=opcode<<6;
+	m_code|=type_m<<AREBIT;
+        m_code|=opcode<<MIUNONEBIT;
         write_code_to_file(m_code,ic);
 	m_code = 0;
 	curr = curr->next;
-	ic++;
+	++ic;
 	switch(type_m){
         	case 3:
         		m_code|=conv_enum3(curr->word)<<5;
@@ -280,23 +322,15 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         		ic++;
         		break;
         	case 2:
-        		while(curr->word[v]!='['){
-        			first_ind[v] = curr->word[v];
-        			v++;	
-        		}
-        		v++;
-        		while(curr->word[v]!=']'){
-        			second_ind[u] = curr->word[v];
-        			u++;
-        			v++;
-        		}
+        		strcpy(first_ind,strtok(curr->word,"["));
+        		strcpy(second_ind,strtok(NULL,"]"));
         		while(curr_sym){
         			if(!strcmp(curr_sym->name,first_ind)){
         				if(curr_sym->type == external){
         					m_code|=1;
         				}else{
-        					m_code|=2;
-        					m_code|=curr_sym->value<<2;
+        					m_code=2;
+        					m_code|=curr_sym->value<<ADDRBIT;
         				}
 					foundFLAG = 1;
 					break;
@@ -311,13 +345,13 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 			foundFLAG = 0;
         		write_code_to_file(m_code,ic);
         		ic++;
-        		if(!isdigit(second_ind)){
+        		if(!isdigit(second_ind[0])){
         			while(curr_sym){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
                                 			m_code|=1;
                                 		}else{
-                                			m_code|=curr_sym->value<<2;
+                                			m_code|=curr_sym->value<<NUMBIT;
                                 		}
 						foundFLAG = 1;
 						break;
@@ -329,27 +363,31 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 					return -1;
 				}
         		}else{
-        			m_code|=atoi(curr->word);
+        			m_code|=atoi(curr->word)<<NUMBIT;
         		}
         		write_code_to_file(m_code,ic);
         		ic++;
         		break;
         	case 1:
-        		m_code|=2;
+        		m_code=2;
 			strcpy(s_word,curr->word);
+			if (s_word[strlen(s_word)-1] == '\n'){
+				strncpy(s_word2,s_word,strlen(s_word)-1);
+			}else{
+				strcpy(s_word2,s_word);
+			}
         		while(curr_sym){
-                        	if(!strcmp(curr_sym->name,s_word)){
-                        		if(curr_sym->type == external){
+                        	if(!strcmp(curr_sym->name,s_word2)){
+					if(curr_sym->type == external){
 						m_code=0;
                         			m_code|=1;
                         		}else{
-                        			m_code|=curr_sym->value<<2;
-                        		}
-        				write_code_to_file(m_code,ic);
-					break;
+                        			m_code|=curr_sym->value<<ADDRBIT;
+					}
                         	}
                         	curr_sym = curr_sym->next;
                         }
+        		write_code_to_file(m_code,ic);
         		ic++;
         		break;
         	case 0:
@@ -360,13 +398,18 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 			}else if(s_word[0]=='+'){
 				strcpy(s_word,strtok(s_word,"+"));
 			}
-        		if(!isdigit(s_word[0])){
+			if (s_word[strlen(s_word)-1] == '\n'){
+				strncpy(s_word2,s_word,strlen(s_word)-1);
+			}else{
+				strcpy(s_word2,s_word);
+			}
+        		if(!isdigit(s_word2[0])){
         			while(curr_sym){
-                                	if(!strcmp(curr_sym->name,s_word)){
+                                	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
                                 			m_code|=1;
                                 		}else{
-                                			m_code|=curr_sym->value<<2;
+                                			m_code|=curr_sym->value<<NUMBIT;
                                 		}
 						break;
                                 	}
@@ -374,9 +417,9 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         			}
         		}else{
 				if(negFLAG){
-        				m_code|=(-1*atoi(s_word))>>2;
+        				m_code|=(-1*atoi(s_word2))<<NUMBIT;
 				}else{
-        				m_code|=atoi(s_word)>>2;
+        				m_code|=atoi(s_word2)<<NUMBIT;
 				}
         		}
         		write_code_to_file(m_code,ic);
@@ -421,7 +464,6 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 				ic = type_two_code(curr,9,head_s,ic);
 				break;
 			case rts:	
-				ic = type_two_code(curr,14,head_s,ic);
 				break;
 			case not:	
 				ic = type_two_code(curr,4,head_s,ic);
@@ -439,7 +481,6 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 				ic = type_two_code(curr,10,head_s,ic);
 				break;
 			case stop:
-				ic = type_two_code(curr,15,head_s,ic);
 				break;
 			default:
 				break;

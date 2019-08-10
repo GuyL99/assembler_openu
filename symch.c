@@ -1,8 +1,8 @@
 #include "helpers.h"
 int symch(symbol symhead)
 {
-    symbol symcurrent = symhead ;
-    symbol symhelper ;
+    symbol *symcurrent = symhead ;
+    symbol *symhelper ;
     int count;
     int haserror = 1 ;
     

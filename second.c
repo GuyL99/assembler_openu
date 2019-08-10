@@ -34,9 +34,9 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 	char s_word2[namelen];
 	int foundFLAG = 0;
 	int negFLAG = 0;
-	m_code|=type_m2<<AREBIT;
-	m_code|=type_m<<MIUNTWOBIT;
-	m_code|=opcode<<MIUNONEBIT;
+	m_code|=type_m2<<MIUNTWOBIT;
+	m_code|=type_m<<MIUNONEBIT;
+	m_code|=opcode<<OPBIT;
 	write_code_to_file(m_code,ic);
 	m_code = 0;
 	++ic;
@@ -58,7 +58,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 			while(curr_sym){
 				if(!strcmp(curr_sym->name,first_ind)){
 					if(curr_sym->type == external){
-						m_code|=1;
+						m_code=EXTERNVAL;
 					}else{
 						m_code=2;
 						m_code|=curr_sym->value<<ADDRBIT;
@@ -80,7 +80,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 				while(curr_sym){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
-                                			m_code|=1;
+                                			m_code=EXTERNVAL;
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -106,8 +106,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 			while(curr_sym){
                         	if(!strcmp(curr_sym->name,s_word)){
                         		if(curr_sym->type == external){
-						m_code = 0;
-                        			m_code|=1;
+                        			m_code=EXTERNVAL;
                         		}else{
                         			m_code|=curr_sym->value<<ADDRBIT;
                         		}
@@ -136,7 +135,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 				while(curr_sym){
                                 	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
-                                			m_code|=EXTERNVAL;
+                                			m_code=EXTERNVAL;
                                 		}else{
                                 			m_code|=curr_sym->value;
                                 		}
@@ -152,7 +151,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 				}
                 	}else{
 				if(negFLAG){
-                			m_code|=(-1*atoi(s_word2))<<NUMBIT;
+                			m_code|=(MAXERVAL-1*atoi(s_word2))<<NUMBIT;
 				}else{
                 			m_code|=atoi(s_word2)<<NUMBIT;
 				}
@@ -184,7 +183,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         		while(curr_sym){
         			if(!strcmp(curr_sym->name,first_ind)){
         				if(curr_sym->type == external){
-        					m_code|=EXTERNVAL;
+        					m_code=EXTERNVAL;
         				}else{
         					m_code=2;
         					m_code|=curr_sym->value<<ADDRBIT;
@@ -207,7 +206,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         			while(curr_sym){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
-                                			m_code|=1;
+                                			m_code=EXTERNVAL;
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -229,17 +228,11 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         		break;
         	case 1:
         		strcpy(s_word,curr->word);
-			if (s_word[strlen(s_word)-1] == '\n'){
-				strncpy(s_word2,s_word,strlen(s_word)-1);
-			}else{
-				strcpy(s_word2,s_word);
-			}
         		m_code=2;
         		while(curr_sym){
-                        	if(!strcmp(curr_sym->name,s_word2)){
+                        	if(!strcmp(curr_sym->name,s_word)){
                         		if(curr_sym->type == external){
-        					m_code = 0;
-                        			m_code|=EXTERNVAL;
+                        			m_code=EXTERNVAL;
                         		}else{
                         			m_code|=curr_sym->value<<ADDRBIT;
                         		}
@@ -284,7 +277,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         			}
                 	}else{
         			if(negFLAG){
-                			m_code|=(-1*atoi(s_word2))<<NUMBIT;
+                			m_code|=(MAXERVAL-1*atoi(s_word2))<<NUMBIT;
         			}else{
                 			m_code|=atoi(s_word2)<<NUMBIT;
         			}
@@ -309,8 +302,8 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 	char s_word2[namelen];
         int foundFLAG = 0;
         int negFLAG = 0;
-	m_code|=type_m<<AREBIT;
-        m_code|=opcode<<MIUNONEBIT;
+	m_code|=type_m<<MIUNTWOBIT;
+        m_code|=opcode<<OPBIT;
         write_code_to_file(m_code,ic);
 	m_code = 0;
 	curr = curr->next;
@@ -327,7 +320,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         		while(curr_sym){
         			if(!strcmp(curr_sym->name,first_ind)){
         				if(curr_sym->type == external){
-        					m_code|=1;
+        					m_code=EXTERNVAL;
         				}else{
         					m_code=2;
         					m_code|=curr_sym->value<<ADDRBIT;
@@ -349,7 +342,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         			while(curr_sym){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
-                                			m_code|=1;
+                                			m_code=EXTERNVAL;
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -371,16 +364,10 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         	case 1:
         		m_code=2;
 			strcpy(s_word,curr->word);
-			if (s_word[strlen(s_word)-1] == '\n'){
-				strncpy(s_word2,s_word,strlen(s_word)-1);
-			}else{
-				strcpy(s_word2,s_word);
-			}
         		while(curr_sym){
-                        	if(!strcmp(curr_sym->name,s_word2)){
+                        	if(!strcmp(curr_sym->name,s_word)){
 					if(curr_sym->type == external){
-						m_code=0;
-                        			m_code|=1;
+                        			m_code=EXTERNVAL;
                         		}else{
                         			m_code|=curr_sym->value<<ADDRBIT;
 					}
@@ -407,7 +394,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         			while(curr_sym){
                                 	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
-                                			m_code|=1;
+                                			m_code=EXTERNVAL;
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -417,7 +404,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         			}
         		}else{
 				if(negFLAG){
-        				m_code|=(-1*atoi(s_word2))<<NUMBIT;
+        				m_code|=(MAXERVAL-1*atoi(s_word2))<<NUMBIT;
 				}else{
         				m_code|=atoi(s_word2)<<NUMBIT;
 				}

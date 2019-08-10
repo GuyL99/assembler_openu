@@ -12,12 +12,13 @@
 #define codelen 14 /* 14 bits to work with */
 #define convertlen 7 /* 14 bits to 7 convert*/  
 #define linelen 80 /*we can decide the len of line in file */ 
-#define AREBIT 2
-#define MIUNTWOBIT 4
-#define MIUNONEBIT 6
+#define MIUNTWOBIT 2
+#define MIUNONEBIT 4
+#define OPBIT 6
 #define ADDRBIT 2
 #define NUMBIT 2
 #define EXTERNVAL 1
+#define MAXERVAL 4096
 
 typedef enum {mov,cmp,add,sub,not,clr,lea,inc,dec,jmp,bne,red,prn,jsr,rts,stop,NONE} command;
 typedef enum {A,R,E}ARE;

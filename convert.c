@@ -1,4 +1,4 @@
-void convert(int n)
+const char* convert(int n)
 {
     int temp , index = convertlen - 1;
     char conv[convertlen] ;
@@ -36,6 +36,6 @@ void convert(int n)
         conv[index] = '*' ;
         index-- ;
     }
-     printf("%s", conv) ;
+    return conv;
     
 }

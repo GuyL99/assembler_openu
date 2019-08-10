@@ -1,4 +1,5 @@
 #include "helpers.h"
+#include "symch.c"
 int circ1(list *head , symbol *symhead,data *datahead ){
     int ic = start ,dc = 0 ; 
     int i , j , l , haserror = 1 , cntln = 0;
@@ -194,7 +195,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         }
         current = current -> next ; /* next word */ 
     }
-    if(symch(symhead) = 0)/*Checks that there are no values twice */
+    if(symch(symhead) == 0)/*Checks that there are no values twice */
         haserror = 0 ;
     return haserror ; /* retrun 0 if there are errors */  
     

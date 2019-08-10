@@ -18,13 +18,10 @@ int main(){
 	if(!circ1_valid){
         	printf("circ1 error stopping assembling\n");
         	return 0;
-        }/*
-	while(head_sym){
-		printf("%d %d %s\n",head_sym->value,head_sym->type,head_sym->name);
-		head_sym = head_sym->next;
-	}*/
+        }
  	circ2_valid = circ2(head_list,head_dat,head_sym);/* creating output */
 	if(!circ2_valid){
+		/*if circ2 is not valid then as requested we are removing the files*/
 		remove_files();
         	printf("circ2 error stopping assembling\n");
         	return 0;

@@ -12,20 +12,24 @@
 #define codelen 14 /* 14 bits to work with */
 #define convertlen 7 /* 14 bits to 7 convert*/  
 #define linelen 80 /*we can decide the len of line in file */ 
-#define MIUNTWOBIT 2
-#define MIUNONEBIT 4
-#define OPBIT 6
-#define ADDRBIT 2
-#define NUMBIT 2
-#define EXTERNVAL 1
-#define MAXERVAL 4096
-
+#define MIUNTWOBIT 2 /*2 bits after the right most*/
+#define MIUNONEBIT 4 /*4 bits after the right most bit and two after where i wrote miun1*/
+#define OPBIT 6 /*6 bits after the right most and two after where i wrote miun2 */
+#define ADDRBIT 2 /*where i would print an address*/
+#define NUMBIT 2 /*where i would print a num*/
+#define EXTERNVAL 1 /*the value of an extern value as machine code*/
+#define MAXERVAL 4096 /*value used for codeing the negative numbers with cropped edges 2^12 as the 12 bits that remain to code them in*/
+/*enum for opcodes(easier to code and read this way)*/
 typedef enum {mov,cmp,add,sub,not,clr,lea,inc,dec,jmp,bne,red,prn,jsr,rts,stop,NONE} command;
-typedef enum {A,R,E}ARE;
+/*enum for symbol types*/
 typedef enum {instrct,cmnd,macro,external} symerer;
+/*diffing the string for the data*/
 typedef enum {tdata,tstring}diffing;
+/*for locating the words*/
 typedef enum {define,dat,str,ent,ext, None} insmac;
+/*easier to code regsiters this way*/
 typedef enum {r0,r1,r2,r3,r4,r5,r6,r7,rNONE}regis;
+/*symbol table linked list struct*/
 typedef struct sym{
 	char name[namelen];
 	unsigned int value;
@@ -33,16 +37,12 @@ typedef struct sym{
 	unsigned int type;
 	struct sym *next;
 } symbol;
-
-typedef struct code{
-	/*int machine_code;*/
-	unsigned int machine_code[codelen];
-	struct code *next;
-} code;
+/*code read struct*/
 typedef struct list{
 	struct list *next;
 	char word[namelen];
 } list;
+/*data+string struct*/
 typedef struct data{
 	unsigned int index;	
 	char name[namelen];
@@ -50,7 +50,8 @@ typedef struct data{
 	diffing type;
 	struct data *next;
 } data;
-
+/*converting oour string to out enums(making it easier to distinguish...
+ some of them could appear with \n ataches so this are duplicated*/
 const static struct {
     command     val;
     const char *str;

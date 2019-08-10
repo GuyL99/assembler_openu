@@ -59,6 +59,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 				if(!strcmp(curr_sym->name,first_ind)){
 					if(curr_sym->type == external){
 						m_code=EXTERNVAL;
+						print_to_ee(curr_sym->name,0,ic);
 					}else{
 						m_code=2;
 						m_code|=curr_sym->value<<ADDRBIT;
@@ -81,6 +82,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
+							print_to_ee(curr_sym->name,0,ic);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -107,6 +109,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                         	if(!strcmp(curr_sym->name,s_word)){
                         		if(curr_sym->type == external){
                         			m_code=EXTERNVAL;
+						print_to_ee(curr_sym->name,0,ic);
                         		}else{
                         			m_code|=curr_sym->value<<ADDRBIT;
                         		}
@@ -136,6 +139,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                                 	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
+							print_to_ee(curr_sym->name,0,ic);
                                 		}else{
                                 			m_code|=curr_sym->value;
                                 		}
@@ -184,6 +188,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         			if(!strcmp(curr_sym->name,first_ind)){
         				if(curr_sym->type == external){
         					m_code=EXTERNVAL;
+						print_to_ee(curr_sym->name,0,ic);
         				}else{
         					m_code=2;
         					m_code|=curr_sym->value<<ADDRBIT;
@@ -207,6 +212,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
+							print_to_ee(curr_sym->name,0,ic);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -233,6 +239,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                         	if(!strcmp(curr_sym->name,s_word)){
                         		if(curr_sym->type == external){
                         			m_code=EXTERNVAL;
+						print_to_ee(curr_sym->name,0,ic);
                         		}else{
                         			m_code|=curr_sym->value<<ADDRBIT;
                         		}
@@ -262,6 +269,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                                 	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
                                 			m_code|=EXTERNVAL;
+							print_to_ee(curr_sym->name,0,ic);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -321,6 +329,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         			if(!strcmp(curr_sym->name,first_ind)){
         				if(curr_sym->type == external){
         					m_code=EXTERNVAL;
+						print_to_ee(curr_sym->name,0,ic);
         				}else{
         					m_code=2;
         					m_code|=curr_sym->value<<ADDRBIT;
@@ -343,6 +352,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
+							print_to_ee(curr_sym->name,0,ic);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -373,6 +383,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
                         	if(!strcmp(curr_sym->name,s_word) || !strcmp(curr_sym->name,s_word2)){
 					if(curr_sym->type == external){
                         			m_code=EXTERNVAL;
+						print_to_ee(curr_sym->name,0,ic);
                         		}else{
                         			m_code|=curr_sym->value<<ADDRBIT;
 					}
@@ -400,6 +411,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
                                 	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
+							print_to_ee(curr_sym->name,0,ic);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -422,6 +434,13 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 }
 
 
+int type_three_code(int opcode, int ic){
+	int m_code=0;
+        m_code|=opcode<<OPBIT;
+        write_code_to_file(m_code,ic);
+	ic++;
+	return ic;
+}
 
 int circ2(list *head_list, data *head_data, symbol *head_s){
 	list *curr = head_list;
@@ -456,6 +475,7 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 				ic = type_two_code(curr,9,head_s,ic);
 				break;
 			case rts:	
+				ic = type_three_code(14,ic);
 				break;
 			case not:	
 				ic = type_two_code(curr,4,head_s,ic);
@@ -473,6 +493,7 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 				ic = type_two_code(curr,10,head_s,ic);
 				break;
 			case stop:
+				ic = type_three_code(15,ic);
 				break;
 			default:
 				break;

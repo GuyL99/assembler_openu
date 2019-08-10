@@ -12,13 +12,13 @@ int symch(symbol symhead)
         symhelper = symcurrent -> next ; /* start serching at the next symbol */
         while(symhelper!=NULL)
         {
-            if(strcmp(symcurrent -> name ,symhelper - name) == 0) 
+            if(strcmp(symcurrent -> name ,symhelper -> name) == 0) 
             count++ ;
             symhelper = symhelper -> next ;
         }
         if (count > 0) 
         {
-        printf(symbol %s is writen Twice  n,symcurrent - name) ;
+        printf(symbol %s is writen Twice  n,symcurrent -> name) ;
         haserror = 0 ;
         }
         symcurrent = symcurrent -> next ;

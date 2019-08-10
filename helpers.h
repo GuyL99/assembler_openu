@@ -55,7 +55,7 @@ typedef struct data{
 } data;
 /*converting oour string to out enums(making it easier to distinguish...
  some of them could appear with \n ataches so this are duplicated*/
-const static struct {
+const static struct {/* command to string */
     command     val;
     const char *str;
 } cmndcnvrt [] = {
@@ -78,7 +78,9 @@ const static struct {
     {rts, "rts\n"},
     {stop, "stop\n"},
 };
-command conv_enum (const char *str)
+/*converting oour string to out enums(making it easier to distinguish...
+ some of them could appear with \n ataches so this are duplicated*/
+command conv_enum (const char *str) 
 {
      int j;
      for (j = 0;  j < sizeof (cmndcnvrt) / sizeof (cmndcnvrt[0]);  ++j)
@@ -96,6 +98,8 @@ const static struct {
     {ent, ".entry"},
     {ext, ".extern"},
 };
+/*converting oour string to out enums(making it easier to distinguish...
+ some of them could appear with \n ataches so this are duplicated*/
 insmac conv_enum2 (const char *str)
 {
      int j;
@@ -125,6 +129,8 @@ const static struct {
     {r7, "r7"},
     {r7, "r7\n"},
 };
+/*converting oour string to out enums(making it easier to distinguish...
+ some of them could appear with \n ataches so this are duplicated*/
 regis conv_enum3 (const char *str)
 {
      int j;

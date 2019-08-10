@@ -194,20 +194,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
         }
         current = current -> next ; /* next word */ 
     }
-     datacurrent = datahead ;
-    while(datacurrent -> next != NULL)
-    {
-        printf(" %s , %d ", datacurrent -> name , datacurrent -> val) ;
-        datacurrent = datacurrent -> next ;
-        
-    }
-    current = head -> next ;
     
-    while(current != NULL)
-    {
-       printf(" %s ", current -> word) ;
-        current = current -> next ; 
-    }
     return haserror ; /* retrun 0 if there are errors */  
     
 

@@ -6,9 +6,9 @@
 int main(){
 	struct list *head_list = (struct list*)malloc(sizeof(struct list));
 	int pre_valid = prerun(head_list); /* making a struct of all the words in the file , without white noise, returning 0 If there are any problems*/ 
-	symbol *head_sym = (symbol*)malloc(sizeof(symbol)); 
-        data *head_dat = (data*)malloc(sizeof(data));
-	int circ1_valid;
+	symbol *head_sym = (symbol*)malloc(sizeof(symbol)); /* symbol table struct */
+        data *head_dat = (data*)malloc(sizeof(data)); /* data for struct */ 
+	int circ1_valid; /* Helps check errors */ 
 	int circ2_valid;
 	if(!pre_valid){
 		printf("syntax error stopping assembling\n");

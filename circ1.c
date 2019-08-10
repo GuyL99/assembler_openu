@@ -48,7 +48,11 @@ int circ1(list *head , symbol *symhead,data *datahead ){
                 || strcmp(current -> next -> word,".entry") == 0
                 || strcmp(current -> next -> word,".extern") == 0
                 )
+                {
                 symcurrent -> type = instrct ;
+                 if (strcmp(current -> next -> word,".string") == 0 || strcmp(current -> next -> word,".data") == 0 ) /* case data */
+                     symcurrent -> value = ic + dc ;
+                }    
                 else
                 symcurrent -> type = cmnd ;
                 /*symcurrent -> cmtype = none ;*/

@@ -2,7 +2,7 @@ assembler: asmbl.o
 	gcc -g -ansi -Wall -pedantic asmbl.o -o assembler
 	@echo "done compiling!"
 	@echo "<=====================>"
-asmbl.o: prerun.o circ1.o circ2.o assem.c helpers.h
+asmbl.o: prerun.o circ1.o circ2.o reinit.c assem.c helpers.h
 	gcc -c -ansi -Wall -pedantic assem.c -o asmbl.o
 	@echo "finished compiling the main"
 	@echo "<===================-->"

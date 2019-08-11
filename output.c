@@ -68,13 +68,13 @@ void remove_files(char obfile[namelen],char extfile[namelen],char entfile[namele
 	int remover2 = remove(entfile);
 	int remover3 = remove(obfile);
 	if(remover1){
-		printf("Error: unable to delete the .ext file");
+		printf("Error: unable to delete the .ext file\n");
 	}
 	if(remover2){
-		printf("Error: unable to delete the .ent file");
+		printf("Error: unable to delete the .ent file\n");
 	}
 	if(remover3){
-		printf("Error: unable to delete the .ob file");
+		printf("Error: unable to delete the .ob file\n");
 	}
 
 }

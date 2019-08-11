@@ -263,7 +263,7 @@ int prerun(list *head_tot, FILE *fp){
         char word[namelen + 1];
 	int u,isdigflag = 0;
 	char line[linelen];
-	list *curr_tot = (list *)malloc(sizeof(list));
+	list *curr_tot = head ; 
 	if (head == NULL) {
         	printf("error whatever could'nt assgin mem");	
         }
@@ -440,8 +440,8 @@ int prerun(list *head_tot, FILE *fp){
 				break;
 			}
 		}*/
-		while(curr_tot && r < 100){
-			r++ ;
+		while(curr_tot){
+			
 			append_tot(head_tot,curr_tot);
 			curr_tot=curr_tot->next;
 		}

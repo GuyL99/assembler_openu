@@ -258,7 +258,7 @@ int prerun(list *head_tot, char codefile[namelen]){
    	if (fp == NULL)
    	{
       		printf("Error while opening the file.\n");
-      		return -1;
+      		return 0;
    	}
 	if (head == NULL) {
         	printf("error whatever could'nt assgin mem");	

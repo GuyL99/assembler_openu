@@ -5,7 +5,7 @@ int circ1(list *head , symbol *symhead,data *datahead,char obfile[namelen] ){
     int i , j , l , haserror = 1 , cntln = 0;
     int datahelp = TRUE ;
     char savename[namelen] , endln[namelen] ; /* the name for data struct */
-    list *current = head -> next ; /* always start with empty word */
+    list *current = head  ; /* always start with empty word */
     symbol *symcurrent = symhead ;
     symbol *symhelper = symhead ; /* for macro */ 
     data *datacurrent = datahead ;

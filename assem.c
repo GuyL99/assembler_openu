@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 		
 	fp = fopen(codename,"r");
 	if(fp){
-	pre_valid = prerun(head_list,fp,j);
+	pre_valid = prerun(head_list,fp);
 	fclose(fp);	
 	if(!pre_valid){
 		printf("syntax error stopping assembling\n");

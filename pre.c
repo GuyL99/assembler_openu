@@ -231,22 +231,29 @@ void append(list *head, char word[]){
 	/*as the name suggests it appends to the head of the code list*/
 	list * current = head;
         while (current->next) {
-		printf("%s %s\n",word,current->word);
         	current = current->next;
         }
         current->next = (list *)malloc(sizeof(list));
         strcpy(current->next->word,word);
         current->next->next = NULL;
 }
+void append_tot(list *head, list * curr){
+	/*as the name suggests it appends to the head of the code list*/
+        while (head->next) {
+        	head = head->next;
+        }
+        head->next = (list *)malloc(sizeof(list));
+        strcpy(head->next->word,curr->word);
+        head->next->next = NULL;
+}
 
 
-int prerun(list *head_tot, FILE *fp,int fff){
+int prerun(list *head_tot, FILE *fp){
 	int validFLAG = TRUE;
 	int cntwrd = 0;
 	int cntln = 0;
-        struct list *head = (struct list *)malloc(sizeof(struct list));
+        struct list *head = (list *)malloc(sizeof(list));
 	list * current = head;
-	int gg;
 	int valid; 
         int i=0;	
         int j=0;
@@ -255,7 +262,7 @@ int prerun(list *head_tot, FILE *fp,int fff){
         char word[namelen + 1];
 	int u,isdigflag = 0;
 	char line[linelen];
-	list *curr_tot = (struct list *)malloc(sizeof(struct list));
+	list *curr_tot = (list *)malloc(sizeof(list));
 	if (head == NULL) {
         	printf("error whatever could'nt assgin mem");	
         }
@@ -433,9 +440,10 @@ int prerun(list *head_tot, FILE *fp,int fff){
 			}
 		}*/
 		while(curr_tot){
-			append(head_tot,curr_tot->word);
+			append_tot(head_tot,curr_tot);
 			curr_tot=curr_tot->next;
 		}
+		free(curr_tot);
 		memset(word, '\0', sizeof word);
 		memset(line, '\0', sizeof line);
 		i=0;

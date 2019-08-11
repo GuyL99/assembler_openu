@@ -22,7 +22,7 @@ int check_miun(char word[namelen]){
 	return 1;
 
 }
-int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
+int type_one_code(list *currr,int opcode, symbol *head_sym,int ic, char codefile[namelen],char extname[namelen]){
 	/*variables*/
 	int m_code=0;
 	list *curr = currr;
@@ -41,7 +41,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 	m_code|=type_m<<MIUNONEBIT;
 	m_code|=opcode<<OPBIT;
 	/*writing it*/
-	write_code_to_file(m_code,ic);
+	write_code_to_file(m_code,ic,codefile);
 	m_code = 0;
 	++ic;
 	curr = curr->next;
@@ -55,7 +55,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 				coded = TRUE;
 			}
 			/*writing to file and counting the ic*/
-			write_code_to_file(m_code,ic);
+			write_code_to_file(m_code,ic,codefile);
 			ic++;
 			break;
 		case 2:
@@ -68,7 +68,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 				if(!strcmp(curr_sym->name,first_ind)){
 					if(curr_sym->type == external){
 						m_code=EXTERNVAL;
-						print_to_ee(curr_sym->name,0,ic);
+						print_to_ee(curr_sym->name,0,ic,extname);
 					}else{
 						m_code=2;
 						m_code|=curr_sym->value<<ADDRBIT;
@@ -83,7 +83,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 				return -1;
 			}
 			foundFLAG = 0;
-			write_code_to_file(m_code,ic);
+			write_code_to_file(m_code,ic,codefile);
 			ic++;
 			m_code = 0;
 			/*checking if the index is a digit or a saved name and if it's a saved name it's checking for the value attached*/
@@ -92,7 +92,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
-							print_to_ee(curr_sym->name,0,ic);
+							print_to_ee(curr_sym->name,0,ic,extname);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -109,7 +109,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         		}else{
         			m_code|=atoi(second_ind)<<NUMBIT;
         		}
-			write_code_to_file(m_code,ic);
+			write_code_to_file(m_code,ic,codefile);
 			ic++;
 			break;
 		case 1:
@@ -120,11 +120,11 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                         	if(!strcmp(curr_sym->name,s_word)){
                         		if(curr_sym->type == external){
                         			m_code=EXTERNVAL;
-						print_to_ee(curr_sym->name,0,ic);
+						print_to_ee(curr_sym->name,0,ic,extname);
                         		}else{
                         			m_code|=curr_sym->value<<ADDRBIT;
                         		}
-        				write_code_to_file(m_code,ic);
+        				write_code_to_file(m_code,ic,codefile);
 					break;
                                                                            
                         	}
@@ -147,7 +147,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                                 	if(!strcmp(curr_sym->name,s_word)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
-							print_to_ee(curr_sym->name,0,ic);
+							print_to_ee(curr_sym->name,0,ic,extname);
                                 		}else{
                                 			m_code|=curr_sym->value;
                                 		}
@@ -171,7 +171,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                 	}
 			foundFLAG = 0;
 			negFLAG = 0;
-        		write_code_to_file(m_code,ic);
+        		write_code_to_file(m_code,ic,codefile);
                 	ic++;
                 	break;
 	}
@@ -188,7 +188,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 		/*checking whether the reg is already coded and if not then codes it*/
 			if(!coded){
         			m_code|=conv_enum3(curr->word)<<5;
-        			write_code_to_file(m_code,ic);
+        			write_code_to_file(m_code,ic,codefile);
         			ic++;
 			}
         		break;
@@ -200,7 +200,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         			if(!strcmp(curr_sym->name,first_ind)){
         				if(curr_sym->type == external){
         					m_code=EXTERNVAL;
-						print_to_ee(curr_sym->name,0,ic);
+						print_to_ee(curr_sym->name,0,ic,extname);
         				}else{
         					m_code=2;
         					m_code|=curr_sym->value<<ADDRBIT;
@@ -216,7 +216,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         		}
 			curr_sym = head_sym;
         		foundFLAG = 0;
-        		write_code_to_file(m_code,ic);
+        		write_code_to_file(m_code,ic,codefile);
         		ic++;
         		m_code = 0;
         		if(!isdigit(second_ind[0])){
@@ -224,7 +224,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
-							print_to_ee(curr_sym->name,0,ic);
+							print_to_ee(curr_sym->name,0,ic,extname);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -241,7 +241,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         		}else{
         			m_code|=atoi(second_ind)<<NUMBIT;
         		}
-        		write_code_to_file(m_code,ic);
+        		write_code_to_file(m_code,ic,codefile);
         		ic++;
         		break;
         	case 1:
@@ -252,11 +252,11 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                         	if(!strcmp(curr_sym->name,s_word)){
                         		if(curr_sym->type == external){
                         			m_code=EXTERNVAL;
-						print_to_ee(curr_sym->name,0,ic);
+						print_to_ee(curr_sym->name,0,ic,extname);
                         		}else{
                         			m_code|=curr_sym->value<<ADDRBIT;
                         		}
-        				write_code_to_file(m_code,ic);
+        				write_code_to_file(m_code,ic,codefile);
         				break;
                                                                            
                         	}
@@ -284,7 +284,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
                                 	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
                                 			m_code|=EXTERNVAL;
-							print_to_ee(curr_sym->name,0,ic);
+							print_to_ee(curr_sym->name,0,ic,extname);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -306,7 +306,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
         			}
                 	}
         		foundFLAG = 0;
-        		write_code_to_file(m_code,ic);
+        		write_code_to_file(m_code,ic,codefile);
                 	ic++;
                 	break;
         }
@@ -314,7 +314,7 @@ int type_one_code(list *currr,int opcode, symbol *head_sym,int ic){
 
 }
 
-int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
+int type_two_code(list *currr,int opcode, symbol *head_sym, int ic, char codefile[namelen], char extname[namelen]){
 	int m_code=0;
         list *curr = currr;
         int type_m=check_miun(curr->next->word);	
@@ -327,7 +327,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         int negFLAG = 0;
 	m_code|=type_m<<MIUNTWOBIT;
         m_code|=opcode<<OPBIT;
-        write_code_to_file(m_code,ic);
+        write_code_to_file(m_code,ic,codefile);
 	m_code = 0;
 	curr = curr->next;
 	++ic;
@@ -335,7 +335,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         	case 3:
 			/*just codes the reg*/
         		m_code|=conv_enum3(curr->word)<<REGONEBIT;
-        		write_code_to_file(m_code,ic);
+        		write_code_to_file(m_code,ic,codefile);
         		ic++;
         		break;
         	case 2:
@@ -346,7 +346,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         			if(!strcmp(curr_sym->name,first_ind)){
         				if(curr_sym->type == external){
         					m_code=EXTERNVAL;
-						print_to_ee(curr_sym->name,0,ic);
+						print_to_ee(curr_sym->name,0,ic,extname);
         				}else{
         					m_code=2;
         					m_code|=curr_sym->value<<ADDRBIT;
@@ -362,14 +362,14 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 			}
 			m_code = 0;
 			foundFLAG = 0;
-        		write_code_to_file(m_code,ic);
+        		write_code_to_file(m_code,ic,codefile);
         		ic++;
         		if(!isdigit(second_ind[0])){
         			while(curr_sym){
                                 	if(!strcmp(curr_sym->name,second_ind)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
-							print_to_ee(curr_sym->name,0,ic);
+							print_to_ee(curr_sym->name,0,ic,extname);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -385,7 +385,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         		}else{
         			m_code|=atoi(curr->word)<<NUMBIT;
         		}
-        		write_code_to_file(m_code,ic);
+        		write_code_to_file(m_code,ic,codefile);
         		ic++;
         		break;
         	case 1:
@@ -401,14 +401,14 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
                         	if(!strcmp(curr_sym->name,s_word) || !strcmp(curr_sym->name,s_word2)){
 					if(curr_sym->type == external){
                         			m_code=EXTERNVAL;
-						print_to_ee(curr_sym->name,0,ic);
+						print_to_ee(curr_sym->name,0,ic,extname);
                         		}else{
                         			m_code|=curr_sym->value<<ADDRBIT;
 					}
                         	}
                         	curr_sym = curr_sym->next;
                         }
-        		write_code_to_file(m_code,ic);
+        		write_code_to_file(m_code,ic,codefile);
         		ic++;
         		break;
         	case 0:
@@ -430,7 +430,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
                                 	if(!strcmp(curr_sym->name,s_word2)){
                                 		if(curr_sym->type == external){
                                 			m_code=EXTERNVAL;
-							print_to_ee(curr_sym->name,0,ic);
+							print_to_ee(curr_sym->name,0,ic,extname);
                                 		}else{
                                 			m_code|=curr_sym->value<<NUMBIT;
                                 		}
@@ -445,7 +445,7 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
         				m_code|=atoi(s_word2)<<NUMBIT;
 				}
         		}
-        		write_code_to_file(m_code,ic);
+        		write_code_to_file(m_code,ic,codefile);
         		ic++;
         		break;
         }
@@ -453,16 +453,16 @@ int type_two_code(list *currr,int opcode, symbol *head_sym, int ic){
 }
 
 
-int type_three_code(int opcode, int ic){
+int type_three_code(int opcode, int ic, char codefile[namelen]){
 	/*in type three I only need to code the opcode*/
 	int m_code=0;
         m_code|=opcode<<OPBIT;
-        write_code_to_file(m_code,ic);
+        write_code_to_file(m_code,ic,codefile);
 	ic++;
 	return ic;
 }
 
-int circ2(list *head_list, data *head_data, symbol *head_s){
+int circ2(list *head_list, data *head_data, symbol *head_s, char obfile[namelen],char extfile[namelen],char entfile[namelen]){
 	list *curr = head_list;
 	data *datacurrent = head_data ;
 	symbol *symcurrent =head_s ;
@@ -475,52 +475,52 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 		/*I counted ic and returned current ic from every function*/
 		switch(conv_enum(curr->word)){
 			case mov:	
-				ic = type_one_code(curr,0,head_s,ic);
+				ic = type_one_code(curr,0,head_s,ic,obfile,extfile);
 				break;
 			case cmp:	
-				ic = type_one_code(curr,1,head_s,ic);
+				ic = type_one_code(curr,1,head_s,ic,obfile,extfile);
 				break;
 			case add:	
-				ic = type_one_code(curr,2,head_s,ic);
+				ic = type_one_code(curr,2,head_s,ic,obfile,extfile);
 				break;
 			case sub:	
-				ic = type_one_code(curr,3,head_s,ic);
+				ic = type_one_code(curr,3,head_s,ic,obfile,extfile);
 				break;
 			case lea:	
-				ic = type_one_code(curr,6,head_s,ic);
+				ic = type_one_code(curr,6,head_s,ic,obfile,extfile);
 				break;
 			case inc:	
-				ic = type_two_code(curr,7,head_s,ic);
+				ic = type_two_code(curr,7,head_s,ic,obfile,extfile);
 				break;
 			case clr:	
-                        	ic = type_two_code(curr,7,head_s,ic);
+                        	ic = type_two_code(curr,7,head_s,ic,obfile,extfile);
                         	break;
 			case dec:	
-				ic = type_two_code(curr,8,head_s,ic);
+				ic = type_two_code(curr,8,head_s,ic,obfile,extfile);
 				break;
 			case jmp:	
-				ic = type_two_code(curr,9,head_s,ic);
+				ic = type_two_code(curr,9,head_s,ic,obfile,extfile);
 				break;
 			case rts:	
-				ic = type_three_code(14,ic);
+				ic = type_three_code(14,ic,obfile);
 				break;
 			case not:	
-				ic = type_two_code(curr,4,head_s,ic);
+				ic = type_two_code(curr,4,head_s,ic,obfile,extfile);
 				break;
 			case jsr:	
-				ic = type_two_code(curr,13,head_s,ic);
+				ic = type_two_code(curr,13,head_s,ic,obfile,extfile);
 				break;
 			case prn:	
-				ic = type_two_code(curr,12,head_s,ic);
+				ic = type_two_code(curr,12,head_s,ic,obfile,extfile);
 				break;
 			case red:	
-				ic = type_two_code(curr,11,head_s,ic);
+				ic = type_two_code(curr,11,head_s,ic,obfile,extfile);
 				break;
 			case bne:	
-				ic = type_two_code(curr,10,head_s,ic);
+				ic = type_two_code(curr,10,head_s,ic,obfile,extfile);
 				break;
 			case stop:
-				ic = type_three_code(15,ic);
+				ic = type_three_code(15,ic,obfile);
 				break;
 			default:
 				break;
@@ -543,7 +543,7 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
 				symcurrent = symcurrent -> next ;   
 			}
 			if(symcurrent != NULL)/* print if found */
-			print_to_ee(endln, 1 ,symcurrent -> value) ;
+			print_to_ee(endln, 1 ,symcurrent -> value,entfile) ;
 			else 
 			printf("Error entry not found.\n");
 		}
@@ -551,7 +551,7 @@ int circ2(list *head_list, data *head_data, symbol *head_s){
         }
 	while(datacurrent -> next != NULL) /* writing the data at the end of file */
    	{
-        	write_code_to_file(datacurrent -> val  , ic+dc-1) ;
+        	write_code_to_file(datacurrent -> val  , ic+dc-1,obfile) ;
       		datacurrent = datacurrent -> next ;
        	        dc++ ;
    	}

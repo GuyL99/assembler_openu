@@ -238,7 +238,7 @@ void append(list *head, char word[]){
 }
 
 
-int prerun(list *head_tot){
+int prerun(list *head_tot, char codefile[namelen]){
 	int validFLAG = TRUE;
 	FILE *fp;
 	int cntwrd = 0;
@@ -251,10 +251,10 @@ int prerun(list *head_tot){
         int flag=0;
 	/*32 chars + 1 for \n*/
         char word[namelen + 1];
-	int u,isdigflag;
+	int u,isdigflag = 0;
 	char line[linelen];
 	list *curr_tot = (struct list *)malloc(sizeof(struct list));
-   	fp = fopen(CODEFILE, "r");
+   	fp = fopen(codefile, "r");
    	if (fp == NULL)
    	{
       		printf("Error while opening the file.\n");

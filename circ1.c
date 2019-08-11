@@ -1,6 +1,6 @@
 #include "helpers.h"
 #include "symch.c"
-int circ1(list *head , symbol *symhead,data *datahead ){
+int circ1(list *head , symbol *symhead,data *datahead,char obfile[namelen] ){
     int ic = start ,dc = 0 ; 
     int i , j , l , haserror = 1 , cntln = 0;
     int datahelp = TRUE ;
@@ -9,6 +9,7 @@ int circ1(list *head , symbol *symhead,data *datahead ){
     symbol *symcurrent = symhead ;
     symbol *symhelper = symhead ; /* for macro */ 
     data *datacurrent = datahead ;
+    FILE *FP=fopen(obfile,"a");
     while(current != NULL) /* scaning all the words in the prog */
     { 
         if (current -> word[strlen(current -> word) - 1] == '\n') /* end of line */ 
@@ -197,6 +198,10 @@ int circ1(list *head , symbol *symhead,data *datahead ){
     }
     if(symch(symhead) == 0)/*Checks that there are no values twice */
         haserror = 0 ;
+	
+    fprintf(FP,"   %d %d\n",ic,dc);
+    fclose(FP);
+
     return haserror ; /* retrun 0 if there are errors */  
     
 

@@ -5,7 +5,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#define CODEFILE "code.as" /*here you can define your code file that you want read from*/
 #define FALSE 0
 #define TRUE 1
 #define start 100 /* ic start at 100 */ 

@@ -14,10 +14,10 @@ int main(int argc, char *argv[]){
 	int circ2_valid;
 	int j ;
 	/*char *codefile;I chose namelen length casue it stands to reason that the name of the file(whitch is a name) would use the same standarts as any name*/
-	char *obname;
-	char *extname;
-	char *entname;
-	char *codename;
+	char obname[namelen];
+	char extname[namelen];
+	char entname[namelen];
+	char codename[namelen];
 	if (argc < 2)
  	  {
        	    printf("Missing Filename\n");
@@ -25,34 +25,36 @@ int main(int argc, char *argv[]){
   	  }
   	 for(j=1; j < argc; j++)   
           {
-            codename = argv[j];
-            printf("codename : %s\n", codename);
           if (j>1)
 	  {
-		obname = NULL ;	
-		extname = NULL ;
-		obname = NULL ;  
+		memset(codename, '\0', sizeof codename);
+		memset(obname, '\0', sizeof obname);
+		memset(extname, '\0', sizeof extname);
+		memset(entname, '\0', sizeof entname);
 	  }
-	strcpy(&entname,codename) ;
-	strtok(&entname,".") ;
-        strcat(&entname,".ent") ;
-	strcpy(&extname,codename) ;
-	strtok(&extname,".") ;
-        strcat(&extname,".ext") ;
-	strcpy(&obname,codename) ;
-	strtok(&obname,".") ;
-        strcat(&obname,".ob") ;
+        strcpy(codename,argv[j]);
+        printf("codename : %s\n", codename);
+	strcpy(entname,codename) ;
+	strtok(entname,".") ;
+        strcat(entname,".ent") ;
+	strcpy(extname,codename) ;
+	strtok(extname,".") ;
+        strcat(extname,".ext") ;
+	strcpy(obname,codename) ;
+	strtok(obname,".") ;
+        strcat(obname,".ob") ;
 	
 	fp = fopen(codename,"r");
-	
 	if(fp){
-	pre_valid = prerun(head_list,codename);
-	fclose(fp)	
+	pre_valid = prerun(head_list,fp);
+	fclose(fp);	
 	if(!pre_valid){
 		printf("syntax error stopping assembling\n");
 		deleteList(&head_list);
 		deleteData(&head_dat);
 		deleteSym(&head_sym);
+		j++;
+		continue;
 		
 	}
 	circ1_valid =circ1(head_list,head_sym,head_dat,obname);/* Creating the symbol table , returning 0 If there are any problems */
@@ -62,8 +64,9 @@ int main(int argc, char *argv[]){
 		deleteList(&head_list);
 		deleteData(&head_dat);
 		deleteSym(&head_sym);
+		j++;
+		continue;
 		
-		return main();
 	}
  	circ2_valid = circ2(head_list,head_dat,head_sym,obname,extname,entname);/* creating output */
 	if(!circ2_valid){
@@ -72,15 +75,18 @@ int main(int argc, char *argv[]){
 		deleteList(&head_list);
 		deleteData(&head_dat);
 		deleteSym(&head_sym);
-		
         	printf("circ2 error stopping assembling\n");
-		return main();
+		j++;
+		continue;
 	}
 	deleteList(&head_list);
 	deleteData(&head_dat);
 	deleteSym(&head_sym);
-	
-	return main();
+	head_list = (list *)malloc(sizeof(list));
+	head_dat = (data *)malloc(sizeof(data));
+	head_sym = (symbol *)malloc(sizeof(symbol));
 	} /* end if(fp) */
 	 } /* end for... */
+	 exit(1);
+	 return 0;
 }

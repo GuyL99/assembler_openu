@@ -238,9 +238,8 @@ void append(list *head, char word[]){
 }
 
 
-int prerun(list *head_tot, char codefile[namelen]){
+int prerun(list *head_tot, FILE *fp){
 	int validFLAG = TRUE;
-	FILE *fp;
 	int cntwrd = 0;
 	int cntln = 0;
         struct list *head = (struct list *)malloc(sizeof(struct list));
@@ -254,12 +253,6 @@ int prerun(list *head_tot, char codefile[namelen]){
 	int u,isdigflag = 0;
 	char line[linelen];
 	list *curr_tot = (struct list *)malloc(sizeof(struct list));
-   	fp = fopen(codefile, "r");
-   	if (fp == NULL)
-   	{
-      		printf("Error while opening the file.\n");
-      		return 0;
-   	}
 	if (head == NULL) {
         	printf("error whatever could'nt assgin mem");	
         }
@@ -445,6 +438,5 @@ int prerun(list *head_tot, char codefile[namelen]){
 		}
 		}
 	}
-   	fclose(fp);
 	return validFLAG;	
 }

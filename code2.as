@@ -15,7 +15,6 @@ LOOP:    jmp W
                   lea sz , r4
          bne W
          not r3
-L1:	 inc L3
 .entry LOOP
          bne LOOP
          clr r0 
@@ -25,4 +24,3 @@ END:     stop
 STR:     .string "abcdef"
 LIST:    .data 6, -9, len
 K:       .data 22
-.extern  L3

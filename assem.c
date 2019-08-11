@@ -1,15 +1,14 @@
 #include "pre.c"
 #include "circ1.c"
 #include "second.c"
-#include "reinit.c"
 
 
 int main(int argc, char *argv[]){
 	FILE *fp;
-	list *head_list = (list*)malloc(sizeof(list));
+	list *head_list = (list *)malloc(sizeof(list)) ;
 	int pre_valid; /* making a struct of all the words in the file , without white noise, returning 0 If there are any problems*/ 
-	symbol *head_sym = (symbol*)malloc(sizeof(symbol)); /* symbol table struct */
-        data *head_dat = (data*)malloc(sizeof(data)); /* data for struct */ 
+	symbol *head_sym=(symbol *)malloc(sizeof(symbol)); /* symbol table struct */
+        data *head_dat =(data *)malloc(sizeof(data));/* data for struct */ 
 	int circ1_valid; /* Helps check errors */ 
 	int circ2_valid;
 	int j ;
@@ -43,41 +42,49 @@ int main(int argc, char *argv[]){
 	strcpy(obname,codename) ;
 	strtok(obname,".") ;
         strcat(obname,".ob") ;
-	
+		
 	fp = fopen(codename,"r");
 	if(fp){
-	pre_valid = prerun(head_list,fp);
+	pre_valid = prerun(head_list,fp,j);
 	fclose(fp);	
 	if(!pre_valid){
 		printf("syntax error stopping assembling\n");
-		deleteList(&head_list);
+		/*deleteList(&head_list);
 		deleteData(&head_dat);
 		deleteSym(&head_sym);
 		j++;
-		continue;
+		continue;*/
+		break;
 		
 	}
+	if(j<1){
+	while(head_list){
+		printf("%s",head_list->word);
+		head_list = head_list->next;
+	}}
 	circ1_valid =circ1(head_list,head_sym,head_dat,obname);/* Creating the symbol table , returning 0 If there are any problems */
 	if(!circ1_valid){
        		printf("circ1 error stopping assembling\n");
 		remove_files(obname,extname,entname);
-		deleteList(&head_list);
+		/*deleteList(&head_list);
 		deleteData(&head_dat);
 		deleteSym(&head_sym);
 		j++;
-		continue;
+		continue;*/
+		break;
 		
 	}
  	circ2_valid = circ2(head_list,head_dat,head_sym,obname,extname,entname);/* creating output */
 	if(!circ2_valid){
 		/*if circ2 is not valid then as requested we are removing the files*/
 		remove_files(obname,extname,entname);
-		deleteList(&head_list);
+        	printf("circ2 error stopping assembling\n");
+		/*deleteList(&head_list);
 		deleteData(&head_dat);
 		deleteSym(&head_sym);
-        	printf("circ2 error stopping assembling\n");
 		j++;
-		continue;
+		continue;*/
+		break;
 	}
 	deleteList(&head_list);
 	deleteData(&head_dat);

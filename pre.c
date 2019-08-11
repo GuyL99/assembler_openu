@@ -1,4 +1,5 @@
 #include "helpers.h"
+#include "reinit.c"
 
 int check_first_group(list *curr){
 	int flag = 1;
@@ -229,21 +230,23 @@ int valid_line(list *head){
 void append(list *head, char word[]){
 	/*as the name suggests it appends to the head of the code list*/
 	list * current = head;
-        while (current->next != NULL) {
+        while (current->next) {
+		printf("%s %s\n",word,current->word);
         	current = current->next;
         }
-        current->next = malloc(sizeof(list));
+        current->next = (list *)malloc(sizeof(list));
         strcpy(current->next->word,word);
         current->next->next = NULL;
 }
 
 
-int prerun(list *head_tot, FILE *fp){
+int prerun(list *head_tot, FILE *fp,int fff){
 	int validFLAG = TRUE;
 	int cntwrd = 0;
 	int cntln = 0;
         struct list *head = (struct list *)malloc(sizeof(struct list));
 	list * current = head;
+	int gg;
 	int valid; 
         int i=0;	
         int j=0;
@@ -268,7 +271,6 @@ int prerun(list *head_tot, FILE *fp){
 		}else{
         	while(line[i]!='\n'){
 			/*checking for special letters in the line to break to things when i get to them*/
-		printf("%s",line);
 			switch(line[i]){
 				/*space is not a word so append the word to the list and go forward*/
 				case ' ':
@@ -421,9 +423,18 @@ int prerun(list *head_tot, FILE *fp){
 		}
 		/*appending the line to the codes entirity*/
 		curr_tot = head;
-		while (curr_tot){
+		/*
+		for(gg=0;gg<80;gg++){
+			if(curr_tot){
+				append(head_tot,curr_tot -> word);
+				curr_tot = curr_tot->next;
+			}else{
+				break;
+			}
+		}*/
+		while(curr_tot){
 			append(head_tot,curr_tot->word);
-			curr_tot = curr_tot->next;
+			curr_tot=curr_tot->next;
 		}
 		memset(word, '\0', sizeof word);
 		memset(line, '\0', sizeof line);
@@ -432,6 +443,7 @@ int prerun(list *head_tot, FILE *fp){
 		flag=0;
 		cntwrd = 0;
 		/*sending line into valid_line func in order to check it's validity as a line*/
+		
 		valid = valid_line(head);
 		if (!valid){
 			printf("error in line %d expanded above\n", cntln);

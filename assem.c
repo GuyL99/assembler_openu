@@ -12,21 +12,37 @@ int main(int argc, char *argv[]){
         data *head_dat = (data*)malloc(sizeof(data)); /* data for struct */ 
 	int circ1_valid; /* Helps check errors */ 
 	int circ2_valid;
-	char *codefile;/*I chose namelen length casue it stands to reason that the name of the file(whitch is a name) would use the same standarts as any name*/
+	int j ;
+	/*char *codefile;I chose namelen length casue it stands to reason that the name of the file(whitch is a name) would use the same standarts as any name*/
 	char *obname;
 	char *extname;
 	char *entname;
-	char codename;
+	char *codename;
 	if (argc < 2)
  	  {
        	    printf("Missing Filename\n");
             return(1);
   	  }
-  	    else
+  	 for(j=1; j < argc; j++)   
           {
-            codename = argv[1];
+            codename = argv[j];
             printf("codename : %s\n", codename);
-          }
+          if (j>1)
+	  {
+		obname = NULL ;	
+		extname = NULL ;
+		obname = NULL ;  
+	  }
+	strcpy(&entname,codename) ;
+	strtok(&entname,".") ;
+        strcat(&entname,".ent") ;
+	strcpy(&extname,codename) ;
+	strtok(&extname,".") ;
+        strcat(&extname,".ext") ;
+	strcpy(&obname,codename) ;
+	strtok(&obname,".") ;
+        strcat(&obname,".ob") ;
+	
 	fp = fopen(codename,"r");
 	
 	if(fp){
@@ -46,11 +62,7 @@ int main(int argc, char *argv[]){
 		deleteList(&head_list);
 		deleteData(&head_dat);
 		deleteSym(&head_sym);
-		memset(codefile, '\0', sizeof codefile);
-		memset(codename, '\0', sizeof codename);
-		memset(obname, '\0', sizeof obname);
-		memset(extname, '\0', sizeof extname);
-		memset(entname, '\0', sizeof entname);
+		
 		return main();
 	}
  	circ2_valid = circ2(head_list,head_dat,head_sym,obname,extname,entname);/* creating output */
@@ -60,22 +72,15 @@ int main(int argc, char *argv[]){
 		deleteList(&head_list);
 		deleteData(&head_dat);
 		deleteSym(&head_sym);
-		memset(codefile, '\0', sizeof codefile);
-		memset(codename, '\0', sizeof codename);
-		memset(obname, '\0', sizeof obname);
-		memset(extname, '\0', sizeof extname);
-		memset(entname, '\0', sizeof entname);
+		
         	printf("circ2 error stopping assembling\n");
 		return main();
 	}
 	deleteList(&head_list);
 	deleteData(&head_dat);
 	deleteSym(&head_sym);
-	memset(codefile, '\0', sizeof codefile);
-	memset(codename, '\0', sizeof codename);
-	memset(obname, '\0', sizeof obname);
-	memset(extname, '\0', sizeof extname);
-	memset(entname, '\0', sizeof entname);
+	
 	return main();
 	} /* end if(fp) */
+	 } /* end for... */
 }

@@ -1,6 +1,4 @@
-; file.as
-
-
+; file ps.as
 .entry   LIST
 .extern  W
 .define  sz = 2

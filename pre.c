@@ -268,6 +268,7 @@ int prerun(list *head_tot, FILE *fp){
 		}else{
         	while(line[i]!='\n'){
 			/*checking for special letters in the line to break to things when i get to them*/
+		printf("%s",line);
 			switch(line[i]){
 				/*space is not a word so append the word to the list and go forward*/
 				case ' ':

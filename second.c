@@ -469,6 +469,7 @@ int circ2(list *head_list, data *head_data, symbol *head_s, char obfile[namelen]
 	int ic = start ;
 	int dc = 1 ;
 	int l ;
+	int r = 0 ;
 	char endln[namelen];
 	while (curr){
 		/* I again broke the code into three types type 1-2 operands operation, type 2 - 1 operand operation and type 3 - no operand operation' those are distinguishable by the way one should code them because for one the number of lines needed to code them, the number of nexts to use and such and such...*/
@@ -549,8 +550,9 @@ int circ2(list *head_list, data *head_data, symbol *head_s, char obfile[namelen]
 		}
 		curr = curr->next;
         }
-	while(datacurrent -> next != NULL) /* writing the data at the end of file */
+	while(datacurrent -> next != NULL && r < 100) /* writing the data at the end of file */
    	{
+		r++ ;
         	write_code_to_file(datacurrent -> val  , ic+dc-1,obfile) ;
       		datacurrent = datacurrent -> next ;
        	        dc++ ;

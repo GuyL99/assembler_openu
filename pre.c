@@ -1,5 +1,4 @@
 #include "helpers.h"
-#include "reinit.c"
 
 int check_first_group(list *curr){
 	int flag = 1;
@@ -237,15 +236,6 @@ void append(list *head, char word[]){
         strcpy(current->next->word,word);
         current->next->next = NULL;
 }
-void append_tot(list *head, list * curr){
-	/*as the name suggests it appends to the head of the code list*/
-        while (head->next) {
-        	head = head->next;
-        }
-        head->next = (list *)malloc(sizeof(list));
-        strcpy(head->next->word,curr->word);
-        head->next->next = NULL;
-}
 
 
 int prerun(list *head_tot, FILE *fp){
@@ -257,7 +247,6 @@ int prerun(list *head_tot, FILE *fp){
 	int valid; 
         int i=0;	
         int j=0;
-	int r = 0 ;
         int flag=0;
 	/*32 chars + 1 for \n*/
         char word[namelen + 1];
@@ -431,18 +420,8 @@ int prerun(list *head_tot, FILE *fp){
 		}
 		/*appending the line to the codes entirity*/
 		curr_tot = head;
-		/*
-		for(gg=0;gg<80;gg++){
-			if(curr_tot){
-				append(head_tot,curr_tot -> word);
-				curr_tot = curr_tot->next;
-			}else{
-				break;
-			}
-		}*/
 		while(curr_tot){
-			
-			append_tot(head_tot,curr_tot);
+			append(head_tot,curr_tot->word);
 			curr_tot=curr_tot->next;
 		}
 		free(curr_tot);

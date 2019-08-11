@@ -49,51 +49,47 @@ int main(int argc, char *argv[]){
 	fclose(fp);	
 	if(!pre_valid){
 		printf("syntax error stopping assembling\n");
-		/*deleteList(&head_list);
-		deleteData(&head_dat);
-		deleteSym(&head_sym);
-		j++;
-		continue;*/
-		break;
-		
+		free(head_list);
+		free(head_dat);
+		free(head_sym);
+		head_list = (list *)malloc(sizeof(list));
+		head_dat = (data *)malloc(sizeof(data));
+		head_sym = (symbol *)malloc(sizeof(symbol));
+		continue;
 	}
-	if(j<1){
-	while(head_list){
-		printf("%s",head_list->word);
-		head_list = head_list->next;
-	}}
 	circ1_valid =circ1(head_list,head_sym,head_dat,obname);/* Creating the symbol table , returning 0 If there are any problems */
 	if(!circ1_valid){
+		/*breaking and destroying obfile if circ1 fires an error*/
        		printf("circ1 error stopping assembling\n");
 		remove_files(obname,extname,entname);
-		/*deleteList(&head_list);
-		deleteData(&head_dat);
-		deleteSym(&head_sym);
-		j++;
-		continue;*/
-		break;
-		
+		free(head_list);
+		free(head_dat);
+		free(head_sym);
+		head_list = (list *)malloc(sizeof(list));
+		head_dat = (data *)malloc(sizeof(data));
+		head_sym = (symbol *)malloc(sizeof(symbol));
+		continue;
 	}
  	circ2_valid = circ2(head_list,head_dat,head_sym,obname,extname,entname);/* creating output */
 	if(!circ2_valid){
 		/*if circ2 is not valid then as requested we are removing the files*/
 		remove_files(obname,extname,entname);
         	printf("circ2 error stopping assembling\n");
-		/*deleteList(&head_list);
-		deleteData(&head_dat);
-		deleteSym(&head_sym);
-		j++;
-		continue;*/
-		break;
+		free(head_list);
+		free(head_dat);
+		free(head_sym);
+		head_list = (list *)malloc(sizeof(list));
+		head_dat = (data *)malloc(sizeof(data));
+		head_sym = (symbol *)malloc(sizeof(symbol));
+		continue;
 	}
-	deleteList(&head_list);
-	deleteData(&head_dat);
-	deleteSym(&head_sym);
+	free(head_list);
+	free(head_dat);
+	free(head_sym);
 	head_list = (list *)malloc(sizeof(list));
 	head_dat = (data *)malloc(sizeof(data));
 	head_sym = (symbol *)malloc(sizeof(symbol));
 	} /* end if(fp) */
 	 } /* end for... */
-	 exit(1);
 	 return 0;
 }

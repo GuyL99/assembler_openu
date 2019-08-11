@@ -1,5 +1,5 @@
 ; file ps.as
-.entry   LIST
+.entry LIST
 .extern  W
 .define  sz = 2
 .define size = 8 

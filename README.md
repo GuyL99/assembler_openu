@@ -14,7 +14,8 @@ $make
 ```console
 $./assembler code1.as code2.as code3.as code4.as
 ```
-### you have unlimited outputs.
+### the output is given in a Gnome/ubuntu terminal coloured way so catting it or in any way presenting it outside of termainal would obscure the output so please refrain from doing so. 
+### you have unlimited input file amount.
 
 ## this project was written fully by myself- Guy Levinger, and my project partner - Dor Daniel.
 

@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
 	circ1_valid =circ1(head_list,head_sym,head_dat,obname);/* Creating the symbol table , returning 0 If there are any problems */
 	if(!circ1_valid){
 		/*breaking and destroying obfile if circ1 fires an error*/
-       		printf("\033[1;3;4;31mcirc1 error stopping assembling\033[0m\n");
+       		printf("\033[1;3;31mcirc1 error stopping assembling\033[0m\n");
 		if(j<argc-1){
 			printf("\033[1;34mmoving on to the next file\033[0m\n\n\n");
 			printf("\n*************************************************************\n");
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 		head_sym = (symbol *)malloc(sizeof(symbol));
 		continue;
 	}
-        printf("\033[1;3;32mcirc1 and symbol generation ended successfully!\033[0m\n");
+        printf("\033[1;3;32mcirc1 and symbol generating ended successfully!\033[0m\n");
         printf("\033[1;3;34mmoving to circ2:\033[0m\n");
 	printf("*************************************************************\n");
 	printf("*************************************************************\n");
